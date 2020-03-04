@@ -32,7 +32,7 @@ class ModuleList extends React.Component {
                 <br />
                 <div style={{display: 'flex', justifyContent: 'center'}}>
                 <Link to={'/addmodule' + '/' + this.props.match.params.id}>
-                    <Button>Enter A new module !</Button>
+                    <Button>Enter a new module !</Button>
                 </Link>
                 </div>
             </div>    

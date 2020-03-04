@@ -108,7 +108,7 @@ class CustomLayout extends React.Component {
                 {
                     this.props.isAuthenticated ?
                     <Menu.Item key="2">
-                            <Link to={'/savedtests/' + this.props.username + '/'}>Previous tests</Link>
+                            <Link to={'/savedtests/' + this.props.username + '/'}>Saved tests</Link>
                         </Menu.Item>
                     : 
                     null
@@ -116,7 +116,7 @@ class CustomLayout extends React.Component {
                 {
                     this.props.isAuthenticated ?
                     <Menu.Item key="7">
-                            <Link to={'/savedfeedbacks/' + this.props.username + '/'}>Previous Feedback</Link>
+                            <Link to={'/savedfeedbacks/' + this.props.username + '/'}>Saved Feedback</Link>
                         </Menu.Item>
                     : 
                     null
