@@ -119,6 +119,7 @@ class FeedbackInformation extends React.Component {
         let min = 1
         let correct = 0
         let incorrect = 0
+        let total = 0
         let max = this.state.generatedFeedback.length
         let randNum = Math.floor(Math.random()*(max-min+1)+min)
         let final_generated_feedback = []
@@ -141,6 +142,7 @@ class FeedbackInformation extends React.Component {
         this.state.answers.map(function(item, i){
           if(item.test == test_id)
           {
+            total = item.total_mark_for_question
             correct = item.total_sub_marks
             incorrect = item.total_mark_for_question - item.total_sub_marks
           }
