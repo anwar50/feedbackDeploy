@@ -190,11 +190,11 @@ class TeacherProfileUpdateView(UpdateAPIView):
     serializer_class = ProfileSerializer
 class NLTKProcess(View):
     greeting = "Morning to ya"
-    
+    final_feedback_given = ""
+    final_feedback_score = 0
+    final_sentiment_score = 0
     def get(self, request, test, mark, correct):
-        final_feedback_given = ""
-        final_feedback_score = 0
-        final_sentiment_score = 0
+        
             #PROCESSING TRAINGING MODEL
         file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
             #process the data from the json file and store in array for the model
@@ -230,7 +230,10 @@ class NLTKProcess(View):
             vader_score = analyzer.polarity_scores(line)
             sentiment_score = vader_score['compound']
             return sentiment_score
-
+        def CalculateScore(line):
+            if mark >= 70 and line >= 0.7:
+                final_feedback_score = line
+            return "Done"
         #return the sentiment category based on the review analysis
         def SentimentalScore(line):
             analyzer = SentimentIntensityAnalyzer()
@@ -263,9 +266,17 @@ class NLTKProcess(View):
         sentiment_score = Training_Data['Sentiment_Score']
         name = Training_Data['Reviewer_Name']
         train = Training_Data
+        for review, score in zip( reviews, sentiment_score):
+            print(mark)
+            if mark > 70:
+                print("yes")
+            if score > 0.7:
+                self.final_feedback_score = score
+            
+
         print(test + " " + mark + " " + correct)
         print("fg")
-        return HttpResponse(self.greeting, final_feedback_given)
+        return HttpResponse(self.final_feedback_score)
 
 
 
