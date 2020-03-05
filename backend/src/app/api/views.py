@@ -188,8 +188,8 @@ class TeacherProfileCreateView(CreateAPIView):
 class TeacherProfileUpdateView(UpdateAPIView):
     queryset = TeacherProfile.objects.all()
     serializer_class = ProfileSerializer
+    #Trains the model when the test results are given from the teacher.
 class NLTKProcess(View):
-    greeting = "Morning to ya"
     final_feedback_given = ""
     final_feedback_score = 0
     final_sentiment_score = 0
@@ -230,10 +230,6 @@ class NLTKProcess(View):
             vader_score = analyzer.polarity_scores(line)
             sentiment_score = vader_score['compound']
             return sentiment_score
-        def CalculateScore(line):
-            if mark >= 70 and line >= 0.7:
-                final_feedback_score = line
-            return "Done"
         #return the sentiment category based on the review analysis
         def SentimentalScore(line):
             analyzer = SentimentIntensityAnalyzer()
@@ -267,16 +263,22 @@ class NLTKProcess(View):
         name = Training_Data['Reviewer_Name']
         train = Training_Data
         for review, score in zip( reviews, sentiment_score):
-            print(mark)
-            if mark > 70:
-                print("yes")
-            if score > 0.7:
+            if int(mark) >= 90 and score > 0.9:
                 self.final_feedback_score = score
-            
-
+                self.final_feedback_given = review  
+            elif int(mark) >= 80 and (score > 0.8 and score < 0.9):
+                self.final_feedback_score = score
+                self.final_feedback_given = review 
+            elif int(mark) >= 70 and (score > 0.7 and score < 0.8):
+                self.final_feedback_score = score
+                self.final_feedback_given = review   
+            else:
+                self.final_feedback_given = "Could not find a feedback suitable for this grade"
+                self.final_feedback_score = 0
         print(test + " " + mark + " " + correct)
         print("fg")
-        return HttpResponse(self.final_feedback_score)
+        context = {self.final_feedback_given, self.final_feedback_score}
+        return HttpResponse(context)
 
 
 
