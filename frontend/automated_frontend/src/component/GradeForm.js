@@ -33,11 +33,31 @@ class GradeForm extends React.Component {
         //also specifying the module id for updating a specific module.
   handleFormSubmit = (e, requestMethod, testID) => {
       e.preventDefault();
-      const grade = e.target.elements.grade.value;
+      let grade = " ";
       const effectiveness = e.target.elements.effectiveness.value;
       const total = e.target.elements.total_mark.value;
       const total_sub = e.target.elements.total_sub.value;
       const final_mark = parseInt((total_sub/total)*100)
+      if(final_mark >= 70 && final_mark <= 100)
+      {
+        grade = "A";
+      }
+      else if(final_mark >= 60 && final_mark <= 69)
+      {
+        grade = "B";
+      }
+      else if(final_mark >= 50 && final_mark <= 59)
+      {
+        grade = "C";
+      }
+      else if(final_mark >= 45 && final_mark <= 49)
+      {
+        grade = "D";
+      }
+      else
+      {
+        grade = "Fail";
+      }
       console.log(testID.id + " " + total + " " + total_sub + " " + final_mark)
       switch(requestMethod) {
         case 'post':
@@ -91,9 +111,6 @@ class GradeForm extends React.Component {
                 <strong>The grade that you have given for this test has been saved!</strong>Go check your saved tests to check them out!!
         </div>
           <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.requestMethod, this.props.testID)}>
-            <Form.Item label="Grade">
-                <Input  name="grade" placeholder="A, B, C, D, E or Fail" />
-            </Form.Item>
             <Form.Item label="Total mark for all questions">
               <Input type="number" name="total_mark" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
             </Form.Item>

@@ -16,7 +16,7 @@ from .serializer import (
     AnswersBankSerializer
 )
 from rest_framework.decorators import api_view
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 import nltk
 # from nltk.tokenize import sent_tokenize, word_tokenize
 from textblob import TextBlob
@@ -193,6 +193,7 @@ class NLTKProcess(View):
     final_feedback_given = ""
     final_feedback_score = 0
     final_sentiment_score = 0
+    final_feedback_category = ""
     def get(self, request, test, mark, correct):
         
             #PROCESSING TRAINGING MODEL
@@ -208,7 +209,7 @@ class NLTKProcess(View):
             #process the data from json into a list of tuples
         reviewFrame = []
         # for review in Reviews[:50]:
-        for review in Reviews[:2]:
+        for review in Reviews[:50]:
             try:
                 jsondata = json.loads(review)
                 reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
@@ -262,23 +263,26 @@ class NLTKProcess(View):
         sentiment_score = Training_Data['Sentiment_Score']
         name = Training_Data['Reviewer_Name']
         train = Training_Data
-        for review, score in zip( reviews, sentiment_score):
-            if int(mark) >= 90 and score > 0.9:
+        for review, score, cat in zip( reviews, sentiment_score, sentiment_cat):
+            if int(mark) >= 90 and score > 0.9 and cat == "positive":
                 self.final_feedback_score = score
                 self.final_feedback_given = review  
-            elif int(mark) >= 80 and (score > 0.8 and score < 0.9):
+                self.final_feedback_category = cat
+            elif int(mark) >= 80 and score > 0.8 and score < 0.9 and cat == "positive":
                 self.final_feedback_score = score
-                self.final_feedback_given = review 
-            elif int(mark) >= 70 and (score > 0.7 and score < 0.8):
+                self.final_feedback_given = review
+                self.final_feedback_category = cat 
+            elif int(mark) >= 70 and score >= 0.7 and score < 0.8 and cat == "positive":
                 self.final_feedback_score = score
-                self.final_feedback_given = review   
-            else:
-                self.final_feedback_given = "Could not find a feedback suitable for this grade"
-                self.final_feedback_score = 0
+                self.final_feedback_given = review
+                self.final_feedback_category = cat   
+            # else:
+            #     self.final_feedback_given = "Could not find a feedback suitable for this grade"
+            #     self.final_feedback_score = 0
         print(test + " " + mark + " " + correct)
         print("fg")
-        context = {self.final_feedback_given, self.final_feedback_score}
-        return HttpResponse(context)
+        context = [self.final_feedback_given, self.final_feedback_score, self.final_feedback_category]
+        return JsonResponse(context, safe = False)
 
 
 
