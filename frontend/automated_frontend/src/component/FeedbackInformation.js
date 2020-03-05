@@ -268,7 +268,9 @@ class FeedbackInformation extends React.Component {
                     <Button type="primary" onClick={openNotification}>
                         Open the see overall mark
                     </Button> <br /><br/>
-                    <Link to={`/generatefeedback/` + this.props.match.params.id + `/` + this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
+                    {/* <Link to={`/generatefeedback/` + this.props.match.params.id + `/` + this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
+                     */}
+                     <Link to={`/reviewFeedback/` + this.props.match.params.id + `/` + test_mark +`/` + correct +`/`+ incorrect +`/` +this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
                   </div>
                 </Row>
               </div>

@@ -155,5 +155,5 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000',
 ]
-
+CSRF_COOKIE_SECURE = False
 #AUTH_USER_MODEL = "app.User" 

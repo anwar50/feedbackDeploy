@@ -39,10 +39,12 @@ class GeneratedFeedback extends React.Component {
     }
     saveFeedback(event1, event2) {
         console.log(event1 + "" + event2)
-        // axios.post(`http://127.0.0.1:8000/api/save/test/`,{
-        //   test: event1,
-        //   username: event2
-        // })
+        
+        axios.get(`http://127.0.0.1:8000/api/processnltk`)
+        .then(res => {
+            
+            console.log(res.data)
+        })
       }
     handleSave (test, grade, feedback, user, percentage) {
         let found = false
@@ -235,6 +237,7 @@ class GeneratedFeedback extends React.Component {
             render: (text, record) => (
               <span>
                 {/* <a href="#">Action 一 {record.test}</a> */}
+                 <Button onClick={(e) => this.saveFeedback(record.test, record.grade)} type="primary" htmlType="submit">Save Feedback</Button>
                  <Button onClick={(e) => this.handleSave(record.test, record.grade, random_feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
                 {/*<Divider type="vertical" />
                 <Link to={`/createFeedback/` + record.test}><Button type="primary" htmlType="submit">Write your own feedback</Button></Link>

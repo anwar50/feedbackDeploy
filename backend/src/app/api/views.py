@@ -1,6 +1,7 @@
 
 from app.models import Module, Test, TeacherProfile, Grade, FeedbackBankTwo, UserTest, Feedback, SavedFeedback, PreProcessedData, AnswersBank
 from django.contrib.auth.models import User
+from django.views import View
 from rest_framework import viewsets
 from .serializer import (
     ModuleSerializer, 
@@ -15,7 +16,7 @@ from .serializer import (
     AnswersBankSerializer
 )
 from rest_framework.decorators import api_view
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 import nltk
 # from nltk.tokenize import sent_tokenize, word_tokenize
 from textblob import TextBlob
@@ -35,175 +36,27 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 import gzip
 import json, string
 warnings.filterwarnings("ignore")
-
-    #extract the features
-# file_content = {}
-# f = gzip.open('C:\\Users\\anwardont delete my\\Documents\\reviews_Health_and_Personal_Care_5.json.gz', 'r')
-# file_content = f.read()
-# f.close()
-# for item in file_content:
-#     print(str(item))
-    #loading the stop words
-# stop_words = stopwords.words('english')
-# tokenized_words = []
-# print(stop_words[:5])
-# data = []
-# for line in gzip.open('C:\\Users\\anwardont delete my\\Documents\\Datasets\\reviews_Clothing_Shoes_and_Jewelry_5.json.gz', 'rb'):
-#     data = json.loads(line)
-#     # feedback_model = FeedbackBankTwo()
-#     # feedback_model.feedback_bank = data["reviewText"]
-#     # feedback_model.save()
-#     #tokenized_words = data["reviewText"]
-#     #print(data["reviewText"])
-#     #print(data)
-#         #remove stopwords/ punctuation and change to lower case
-#     # removed_punctuation = data["reviewText"].lower()
-#     # for c in string.punctuation:
-#     #     removed_punctuation = removed_punctuation.replace(c, "")
-#     # tokenized_words = word_tokenize(removed_punctuation)
-#     #     #array version of the sentence
-#     # filtered = []
-#     #     #string version of the sentence
-#     # filtered_output = ""
-#     #     #remove stopwords
-#     # for w in tokenized_words:
-#     #     if w not in stop_words:
-#     #         filtered.append(w)
-#     #         filtered_output += w
-#     # preprocessed = PreProcessedData()
-#     # preprocessed.processed_feedback = filtered
-#     # preprocessed.save()
-
-# print(len(data))
-# one_line = json.loads(line)
-# print(one_line)
-#     #remove stopwords/ punctuation and change to lower case
-# removed_punctuation = data["reviewText"].lower()
-# for c in string.punctuation:
-#     removed_punctuation = removed_punctuation.replace(c, "")
-# tokenized_words = word_tokenize(removed_punctuation)
-#     #array version of the sentence
-# filtered = []
-#     #string version of the sentence
-# filtered_output = ""
-#     #remove stopwords
-# for w in tokenized_words:
-#     if w not in stop_words:
-#         filtered.append(w)
-#         filtered_output += w
-# print(tokenized_words)
-#     #print filtered sentences without punctuation and stopwords
-# print(filtered)
-# # preprocessed = PreProcessedData()
-# # preprocessed.processed_feedback = filtered
-# # preprocessed.save()
-#     #score for review text
-# print(data["overall"])
-
 def Features(list_words):
         return dict([(word, True) for word in list_words])
+#go through sentiment categories for all 50 data used.
+        # for review in reviews and rating in ratings:
+        #     #pre_processed = PreProcessedData()
+        #     print(review)
+            #store pre processed data with the review and the rating
+        # for rating, review in zip(ratings, reviews):
+        #     pre_processed = PreProcessedData()
+        #     pre_processed.processed_feedback = review
+        #     pre_processed.rating = rating
+        #     pre_processed.save()
 
-
-
-
-#PROCESSING TRAINGING MODEL
-file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
-    #process the data from the json file and store in array for the model
-Reviews = []
-with open(file[0]) as data:
-    read_data = data.read()
-    for review in read_data.split('\n'):
-        Reviews.append(review)
-print(Reviews[0]) #prints the first review object
-
-    #process the data from json into a list of tuples
-reviewFrame = []
-# for review in Reviews[:50]:
-for review in Reviews[:2]:
-    try:
-        jsondata = json.loads(review)
-        reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
-    except:
-        pass
-
-#making a dataframe using the list of tuples created earlier
-new_dataset = pd.DataFrame(reviewFrame, columns=['Reviewer_ID','Asin','Reviewer_Name','helpful_UpVote','Total_Votes','Review_Text','Rating','Summary','Unix_Review_Time','Review_Time'])
-
-#Calculation of sentiments for each review
-def Sentimental_Naive(line):
-    blob = TextBlob(line, analyzer=NaiveBayesAnalyzer())
-    sentiment_score = blob.sentiment.classification
-    return sentiment_score
-
-#creating a compound score for each review
-def Sentimental(line):
-    analyzer = SentimentIntensityAnalyzer()
-    vader_score = analyzer.polarity_scores(line)
-    sentiment_score = vader_score['compound']
-    return sentiment_score
-
-#return the sentiment category based on the review analysis
-def SentimentalScore(line):
-    analyzer = SentimentIntensityAnalyzer()
-    vader_score = analyzer.polarity_scores(line)
-    sentiment_score = vader_score['compound']
-    if sentiment_score >= 0.5:
-        return 'positive'
-    elif (sentiment_score > -0.5) and (sentiment_score < 0.5):
-        return 'neutral'
-    elif sentiment_score <= -0.5:
-        return 'negative'
-
-#taking the first 100,000 reviews
-Training_Data = new_dataset.head(10000)
-
-#calculate the sentiment score and store new column called
-Training_Data['Sentiment_Score'] = Training_Data['Review_Text'].apply(lambda x: Sentimental(x))
-Training_Data['Sentiment_Category'] = Training_Data['Review_Text'].apply(lambda x: SentimentalScore(x))
-
-#score = Training_Data.loc[Training_Data['Sentiment_Score']]
-neutral = Training_Data.loc[Training_Data['Sentiment_Category'] == 'neutral']
-positive = Training_Data.loc[Training_Data['Sentiment_Category'] == 'positive']
-negative = Training_Data.loc[Training_Data['Sentiment_Category'] == 'negative']
-
-print(positive)
-print(negative)
-ratings = Training_Data['Rating']
-reviews = Training_Data['Review_Text']
-sentiment_cat = Training_Data['Sentiment_Category']
-sentiment_score = Training_Data['Sentiment_Score']
-name = Training_Data['Reviewer_Name']
-train = Training_Data
-    #go through sentiment categories for all 50 data used.
-# for review in reviews and rating in ratings:
-#     #pre_processed = PreProcessedData()
-#     print(review)
-    #store pre processed data with the review and the rating
-# for rating, review in zip(ratings, reviews):
-#     pre_processed = PreProcessedData()
-#     pre_processed.processed_feedback = review
-#     pre_processed.rating = rating
-#     pre_processed.save()
-
-# FeedbackBankTwo.objects.all().delete()
-# PreProcessedData.objects.all().delete()
-# for score, category, review in zip(sentiment_score, sentiment_cat, reviews):
-#     feedback_final = FeedbackBankTwo()
-#     feedback_final.feedback_bank = review
-#     feedback_final.category = category
-#     feedback_final.percentage = score*100
-#     feedback_final.save()
-
-
-
-
-
-
-
-
-
-
-
+        # FeedbackBankTwo.objects.all().delete()
+        # PreProcessedData.objects.all().delete()
+        # for score, category, review in zip(sentiment_score, sentiment_cat, reviews):
+        #     feedback_final = FeedbackBankTwo()
+        #     feedback_final.feedback_bank = review
+        #     feedback_final.category = category
+        #     feedback_final.percentage = score*100
+        #     feedback_final.save()
 from rest_framework.generics import (
     ListAPIView, 
     RetrieveAPIView,
@@ -335,8 +188,122 @@ class TeacherProfileCreateView(CreateAPIView):
 class TeacherProfileUpdateView(UpdateAPIView):
     queryset = TeacherProfile.objects.all()
     serializer_class = ProfileSerializer
-def NLTKProcess(request):
-    print("fg")
+class NLTKProcess(View):
+    greeting = "Morning to ya"
+    
+    def get(self, request, test, mark, correct):
+        final_feedback_given = ""
+        final_feedback_score = 0
+        final_sentiment_score = 0
+            #PROCESSING TRAINGING MODEL
+        file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
+            #process the data from the json file and store in array for the model
+        Reviews = []
+        with open(file[0]) as data:
+            read_data = data.read()
+            for review in read_data.split('\n'):
+                Reviews.append(review)
+        print(Reviews[0]) #prints the first review object
+
+            #process the data from json into a list of tuples
+        reviewFrame = []
+        # for review in Reviews[:50]:
+        for review in Reviews[:2]:
+            try:
+                jsondata = json.loads(review)
+                reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
+            except:
+                pass
+
+        #making a dataframe using the list of tuples created earlier
+        new_dataset = pd.DataFrame(reviewFrame, columns=['Reviewer_ID','Asin','Reviewer_Name','helpful_UpVote','Total_Votes','Review_Text','Rating','Summary','Unix_Review_Time','Review_Time'])
+
+        #Calculation of sentiments for each review
+        def Sentimental_Naive(line):
+            blob = TextBlob(line, analyzer=NaiveBayesAnalyzer())
+            sentiment_score = blob.sentiment.classification
+            return sentiment_score
+
+        #creating a compound score for each review
+        def Sentimental(line):
+            analyzer = SentimentIntensityAnalyzer()
+            vader_score = analyzer.polarity_scores(line)
+            sentiment_score = vader_score['compound']
+            return sentiment_score
+
+        #return the sentiment category based on the review analysis
+        def SentimentalScore(line):
+            analyzer = SentimentIntensityAnalyzer()
+            vader_score = analyzer.polarity_scores(line)
+            sentiment_score = vader_score['compound']
+            if sentiment_score >= 0.5:
+                return 'positive'
+            elif (sentiment_score > -0.5) and (sentiment_score < 0.5):
+                return 'neutral'
+            elif sentiment_score <= -0.5:
+                return 'negative'
+
+        #taking the first 100,000 reviews
+        Training_Data = new_dataset.head(10000)
+
+        #calculate the sentiment score and store new column called
+        Training_Data['Sentiment_Score'] = Training_Data['Review_Text'].apply(lambda x: Sentimental(x))
+        Training_Data['Sentiment_Category'] = Training_Data['Review_Text'].apply(lambda x: SentimentalScore(x))
+
+        #score = Training_Data.loc[Training_Data['Sentiment_Score']]
+        neutral = Training_Data.loc[Training_Data['Sentiment_Category'] == 'neutral']
+        positive = Training_Data.loc[Training_Data['Sentiment_Category'] == 'positive']
+        negative = Training_Data.loc[Training_Data['Sentiment_Category'] == 'negative']
+
+        print(positive)
+        print(negative)
+        ratings = Training_Data['Rating']
+        reviews = Training_Data['Review_Text']
+        sentiment_cat = Training_Data['Sentiment_Category']
+        sentiment_score = Training_Data['Sentiment_Score']
+        name = Training_Data['Reviewer_Name']
+        train = Training_Data
+        print(test + " " + mark + " " + correct)
+        print("fg")
+        return HttpResponse(self.greeting, final_feedback_given)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # queryset = FeedbackBankTwo.objects.all()
     # print(FeedbackBankTwo.objects.values_list('feedback_bank', flat=True))
     # feedback = list(FeedbackBankTwo.objects.values_list('feedback_bank', flat=True))[1]
@@ -391,7 +358,6 @@ def NLTKProcess(request):
     # predicted_sentiment = probdist.max()
     # print("Predicted sentiment:", predicted_sentiment)
     # print("Probability:", round(probdist.prob(predicted_sentiment), 2))
-    print("r")
     # input_feedback  = PreProcessedData.objects.values_list('processed_feedback', flat=True)
     # ##training data to use, for my project I used the movie reviews in NLTK
     # positive_fileids = movie_reviews.fileids('pos')
