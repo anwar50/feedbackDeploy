@@ -203,9 +203,9 @@ class GeneratedFeedback extends React.Component {
                  <Button onClick={(e) => this.handleSave(record.test, record.grade, random_feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
                 {/*<Divider type="vertical" />
                 <Link to={`/createFeedback/` + record.test}><Button type="primary" htmlType="submit">Write your own feedback</Button></Link>
-                <Divider type="vertical" />
+               */} <Divider type="vertical" />
                 <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedback</Button></CSVLink>
-            */}</span>
+            </span>
             ),
           }];
           const testInfo = [{
