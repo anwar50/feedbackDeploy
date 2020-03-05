@@ -12,6 +12,7 @@ class GeneratedFeedback extends React.Component {
             test: [],
             grades: [],
             generatedFeedback: [],
+            answers: [],
             showingAlert: false
         }
     }
@@ -20,17 +21,20 @@ class GeneratedFeedback extends React.Component {
         axios.all([
             axios.get('http://127.0.0.1:8000/api/test'),
             axios.get('http://127.0.0.1:8000/api/grades'),
-            axios.get('http://127.0.0.1:8000/api/generatedFeedback')
+            axios.get('http://127.0.0.1:8000/api/generatedFeedback'),
+            axios.get('http://127.0.0.1:8000/api/answers')
         ])
-        .then(axios.spread((savedtestsres, grades, feedback) => {
+        .then(axios.spread((savedtestsres, grades, feedback, answers) => {
                 this.setState({
                     test: savedtestsres.data,
                     grades: grades.data,
-                    generatedFeedback: feedback.data
+                    generatedFeedback: feedback.data,
+                    answers: answers.data
                 })
                 console.log(this.state.test)
                 console.log(this.state.grades)
                 console.log(this.state.generatedFeedback)
+                console.log(this.state.answers)
         }))
     }
     saveFeedback(event1, event2) {
@@ -102,6 +106,8 @@ class GeneratedFeedback extends React.Component {
         console.log(id)
         let test_id = 0
         let test_grade = 0
+        let test_mark = 0
+        let correct_answers = 0
         let min = 1
         let max = this.state.generatedFeedback.length
         let randNum = Math.floor(Math.random()*(max-min+1)+min)
@@ -117,17 +123,42 @@ class GeneratedFeedback extends React.Component {
             if(item.test == test_id)
             {
                 test_grade = item.grade
+                test_mark = item.grade_mark
             }
         })
+        this.state.answers.map(function(item, i){
+          if(test_id == item.test)
+          {
+            correct_answers = item.total_sub_marks
+          }
+        })
         this.state.generatedFeedback.map(function(item, i){
-                if(test_grade == "A" && item.category == "positive" && item.percentage >= 70)
+                if(test_grade == "A" && item.category == "positive" )
                 {
-                    
-                    final_generated_feedback.push(item.feedback_bank)
+                    if(test_mark >= 90 && correct_answers >= 90 && item.percentage >= 90)
+                    {
+                      final_generated_feedback.push(item.feedback_bank)
+                    }
+                    else if(test_mark >= 80 && correct_answers >= 80 && (item.percentage >= 80 && item.percentage < 90))
+                    {
+                      final_generated_feedback.push(item.feedback_bank)
+                    }
+                    else if(test_mark >= 70 && correct_answers >= 70 && (item.percentage >= 70 && item.percentage < 80))
+                    {
+                      final_generated_feedback.push(item.feedback_bank)
+                    }
                 }
-                else if(test_grade == "B" && item.category == "positive" && (item.percentage >= 50 && item.percentage < 70))
+                else if(test_grade == "B" && item.category == "positive")
                 {
-                    final_generated_feedback.push(item.feedback_bank)
+                    if(test_mark >= 60 && correct_answers >= 60 && (item.percentage >= 60 && item.percentage < 70))
+                    {
+                      final_generated_feedback.push(item.feedback_bank)
+                    }
+                    else if(test_mark >= 50 && correct_answers >= 50 && (item.percentage >= 50 && item.percentage < 60))
+                    {
+                      final_generated_feedback.push(item.feedback_bank)
+                    }
+                    
                 }   
                 else if(test_grade == "C" && item.category == "negative" && (item.percentage > 50))
                 {
@@ -136,6 +167,10 @@ class GeneratedFeedback extends React.Component {
                 else if(test_grade == "D" && item.category == "negative" && (item.percentage > 70))
                 {
                     final_generated_feedback.push(item.feedback_bank)
+                }
+                else if(test_grade == "Fail" && item.category == "negative")
+                {
+
                 }
         })
             //randomly generate a feedback whether its positive or negative
@@ -203,9 +238,9 @@ class GeneratedFeedback extends React.Component {
                  <Button onClick={(e) => this.handleSave(record.test, record.grade, random_feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
                 {/*<Divider type="vertical" />
                 <Link to={`/createFeedback/` + record.test}><Button type="primary" htmlType="submit">Write your own feedback</Button></Link>
-               */} <Divider type="vertical" />
+                <Divider type="vertical" />
                 <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedback</Button></CSVLink>
-            </span>
+            */}</span>
             ),
           }];
           const testInfo = [{

@@ -29,8 +29,6 @@ class Test(models.Model):
     test_count = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
         #can only be maximum 10 sub questions
     num_subquestions = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)])
-    correct_answers = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
-    incorrect_answers = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     description = models.CharField(max_length=70, default="None")
     created_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
         #Multiple choice questions (MCQs) OR True/False questions OR Short Answer Questions OR SKELETON QUESTIONS!

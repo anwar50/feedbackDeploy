@@ -102,7 +102,7 @@ urlpatterns = [
     path('savedfeedback/<pk>', SavedFeedbackDetailView.as_view()),
     path('savedfeedback/<pk>/update/', SavedFeedbackUpdateView.as_view()),
     path('savedfeedback/<pk>/delete/', SavedFeedbackDeleteView.as_view()),
-    path('processnltk', NLTKProcess.as_view()),
+   # path('processnltk', NLTKProcess.as_view()),
         ##generated Feedback category
     path('generatedFeedback', FeedbackListView.as_view()),
 ]

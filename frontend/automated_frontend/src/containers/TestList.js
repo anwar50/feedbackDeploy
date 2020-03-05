@@ -87,7 +87,7 @@ class TestList extends React.Component {
         }, 5000);
       })
     }
-    render()
+    render() 
     {
         var options = { year: 'numeric', month: 'long', day: 'numeric' };
         const {id} = this.props.match.params

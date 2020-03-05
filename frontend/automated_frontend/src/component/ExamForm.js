@@ -43,8 +43,6 @@ class ExamForm extends React.Component {
       const num_questions = e.target.elements.num.value;
       const num_sub = e.target.elements.sub.value;
       const type = this.state.type;
-      const correct = e.target.elements.correct.value;
-      const incorrect = e.target.elements.incorrect.value;
       console.log(questionID)
       console.log(title, num_questions, description, type);
 
@@ -54,8 +52,6 @@ class ExamForm extends React.Component {
             name: title,
             test_count: num_questions,
             num_subquestions: num_sub,
-            correct_answers: correct,
-            incorrect_answers: incorrect,
             description: description,
             created_date: new Date().toLocaleString(),
             questiontype: type,
@@ -118,12 +114,6 @@ class ExamForm extends React.Component {
               </Form.Item>
               <Form.Item label="Number of sub questions">
                 <Input type="number" name="sub" pattern="[0-9]*" onKeyPress={this.onKeyPress.bind(this)} />
-              </Form.Item>
-              <Form.Item label="Number of correct answers">
-                <Input type="number" name="correct" pattern="[0-9]*" onKeyPress={this.onKeyPress.bind(this)} />
-              </Form.Item>
-              <Form.Item label="Number of incorrect answers">
-                <Input type="number" name="incorrect" pattern="[0-9]*" onKeyPress={this.onKeyPress.bind(this)} />
               </Form.Item>
               <Form.Item label="Description">
                 <Input name="description" name="description" placeholder="e.g. mid term or revision..." />

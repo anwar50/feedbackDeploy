@@ -27,14 +27,16 @@ class DetailTestView extends React.Component {
     }
     render()
     { 
-        return(
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return( 
+            
             <div>
                <Card title={this.state.module.title}>
                     <p>Name: {this.state.module.name}</p>
                     <p>Number of questions: {this.state.module.test_count}</p>
                     <p>Description of test: {this.state.module.description} </p>
                     <p>Type of question: {this.state.module.questiontype} </p>
-                    <p>Date created: {this.state.module.created_date} </p>
+                    <p>Date created: {new Date(this.state.module.created_date).toLocaleDateString([], options)} </p>
                 </Card>
                 <ExamForm requestMethod="put"
                             moduleID={this.props.match.params.moduleID}

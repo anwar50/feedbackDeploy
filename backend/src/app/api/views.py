@@ -335,7 +335,8 @@ class TeacherProfileCreateView(CreateAPIView):
 class TeacherProfileUpdateView(UpdateAPIView):
     queryset = TeacherProfile.objects.all()
     serializer_class = ProfileSerializer
-class NLTKProcess(RetrieveAPIView):
+def NLTKProcess(request):
+    print("fg")
     # queryset = FeedbackBankTwo.objects.all()
     # print(FeedbackBankTwo.objects.values_list('feedback_bank', flat=True))
     # feedback = list(FeedbackBankTwo.objects.values_list('feedback_bank', flat=True))[1]
