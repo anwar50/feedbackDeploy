@@ -20,7 +20,6 @@ class FeedbackInformation extends React.Component {
             searchedColumn: '',
         }
     }
-  
     componentDidMount(){
         axios.all([
             axios.get('http://127.0.0.1:8000/api/test'),
@@ -272,7 +271,7 @@ class FeedbackInformation extends React.Component {
                     </Button> <br /><br/>
                     {/* <Link to={`/generatefeedback/` + this.props.match.params.id + `/` + this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
                      */}
-                     <Link to={`/reviewFeedback/` + this.props.match.params.id + `/` + test_mark +`/` + correct +`/`+ incorrect +`/` +this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
+                     <Link to={`/reviewFeedback/` + this.props.match.params.id + `/` + test_mark +`/` + test_grade + `/` + correct +`/`+ incorrect +`/` +this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
                   </div>
                 </Row>
               </div>

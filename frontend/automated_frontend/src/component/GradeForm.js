@@ -34,29 +34,34 @@ class GradeForm extends React.Component {
   handleFormSubmit = (e, requestMethod, testID) => {
       e.preventDefault();
       let grade = " ";
-      const effectiveness = e.target.elements.effectiveness.value;
+      const effectiveness = "";
       const total = e.target.elements.total_mark.value;
       const total_sub = e.target.elements.total_sub.value;
       const final_mark = parseInt((total_sub/total)*100)
       if(final_mark >= 70 && final_mark <= 100)
       {
         grade = "A";
+        effectiveness = "Outstanding";
       }
       else if(final_mark >= 60 && final_mark <= 69)
       {
         grade = "B";
+        effectiveness = "Good";
       }
       else if(final_mark >= 50 && final_mark <= 59)
       {
         grade = "C";
+        effectiveness = "Need Improvement";
       }
       else if(final_mark >= 45 && final_mark <= 49)
       {
         grade = "D";
+        effectiveness = "Poor";
       }
       else
       {
         grade = "Fail";
+        effectiveness = "Fail";
       }
       console.log(testID.id + " " + total + " " + total_sub + " " + final_mark)
       switch(requestMethod) {
@@ -64,7 +69,7 @@ class GradeForm extends React.Component {
           axios.post(`http://127.0.0.1:8000/api/create/grade/`, {
             grade: grade,
             grade_mark: final_mark,
-            effectiveness:effectiveness,
+            effectiveness: effectiveness,
             test: testID.id
           })
           .then(res => {
@@ -120,9 +125,9 @@ class GradeForm extends React.Component {
             {/* <Form.Item label="Grade Number">
                   <Input type="number" name="num" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
               </Form.Item> */}
-              <Form.Item label="Effectiveness">
+              {/* <Form.Item label="Effectiveness">
                 <Input name="effectiveness" placeholder="Outstanding, Good, Need Improvement, Poor or Fail.." />
-              </Form.Item>
+              </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">{this.props.btnText}</Button>
           </Form.Item>
