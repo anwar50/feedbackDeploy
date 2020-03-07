@@ -264,22 +264,22 @@ class NLTKProcess(View):
         name = Training_Data['Reviewer_Name']
         train = Training_Data
         for review, score, cat in zip( reviews, sentiment_score, sentiment_cat):
-            if int(mark) >= 90 and score > 0.9 and cat == "positive":
+            if int(mark) >= 90 and score >= 0.9 and cat == "positive":
                 self.final_feedback_score = score
                 self.final_feedback_given = review  
                 self.final_feedback_category = cat
-            elif int(mark) >= 80 and score > 0.8 and score < 0.9 and cat == "positive":
-                self.final_feedback_score = score
-                self.final_feedback_given = review
-                self.final_feedback_category = cat 
-            elif int(mark) >= 70 or int(mark) >= 60 and score >= 0.7 or score >= 0.6 and score < 0.8 and cat == "positive":
-                self.final_feedback_score = score
-                self.final_feedback_given = review
-                self.final_feedback_category = cat
-            elif int(mark) >= 50 and score >= 0.5 and score < 0.7 and cat == "negative":
-                self.final_feedback_score = score
-                self.final_feedback_given = review
-                self.final_feedback_category = cat     
+            # elif int(mark) >= 80 and score > 0.8 and score < 0.9 and cat == "positive":
+            #     self.final_feedback_score = score
+            #     self.final_feedback_given = review
+            #     self.final_feedback_category = cat 
+            # elif int(mark) >= 70 or int(mark) >= 60 and score >= 0.7 or score >= 0.6 and score < 0.8 and cat == "positive":
+            #     self.final_feedback_score = score
+            #     self.final_feedback_given = review
+            #     self.final_feedback_category = cat
+            # elif int(mark) >= 50 and score >= 0.5 and score < 0.7 and cat == "negative":
+            #     self.final_feedback_score = score
+            #     self.final_feedback_given = review
+            #     self.final_feedback_category = cat     
             # else:
             #     self.final_feedback_given = "Could not find a feedback suitable for this grade"
             #     self.final_feedback_score = 0

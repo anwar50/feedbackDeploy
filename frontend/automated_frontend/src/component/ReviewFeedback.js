@@ -57,7 +57,7 @@ class ReviewFeedback extends React.Component{
                     <Card bordered style={{color: 'blue'}} title="Test Information" bordered={false}>
                       Test Name: {this.props.match.params.testid} <br/>
                       Test Grade: {this.props.match.params.testgrade} <br />
-                      Test Mark: {this.props.match.params.testmark}% <br/>
+                      Test Mark: {this.props.match.params.testmark} % <br/>
                       Correct Answers: {this.props.match.params.correct} <br/>
                       Incorrect Answers: {this.props.match.params.incorrect} <br/>
                     </Card>
