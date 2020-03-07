@@ -194,7 +194,7 @@ class NLTKProcess(View):
     final_feedback_score = 0
     final_sentiment_score = 0
     final_feedback_category = ""
-    def get(self, request, test, mark, correct):
+    def get(self, request, test, grade, mark, correct):
         
             #PROCESSING TRAINGING MODEL
         file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
@@ -268,31 +268,68 @@ class NLTKProcess(View):
         name = Training_Data['Reviewer_Name']
         train = Training_Data
         for review, score, cat in zip( reviews, sentiment_score, sentiment_cat):
-            if int(mark) >= 90 and score >= 0.9 and cat == "positive":
-                new_obj = {'score': score,
-                            'review': review,
-                            'category': cat
-                            }
-                top_90.append(new_obj)
-                context = top_90
-                self.final_feedback_score = score
-                self.final_feedback_given = review
-                self.final_feedback_category = cat 
-            if int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9 and cat == "positive":
-                self.final_feedback_score = score
-                self.final_feedback_given = review
-                self.final_feedback_category = cat 
-            # elif int(mark) >= 70 or int(mark) >= 60 and score >= 0.7 or score >= 0.6 and score < 0.8 and cat == "positive":
-            #     self.final_feedback_score = score
-            #     self.final_feedback_given = review
-            #     self.final_feedback_category = cat
-            # elif int(mark) >= 50 and score >= 0.5 and score < 0.7 and cat == "negative":
-            #     self.final_feedback_score = score
-            #     self.final_feedback_given = review
-            #     self.final_feedback_category = cat     
-            # else:
-            #     self.final_feedback_given = "Could not find a feedback suitable for this grade"
-            #     self.final_feedback_score = 0
+            if grade == "A" and cat == "positive":
+                    #students with 90% and higher
+                if int(mark) >= 90 and score >= 0.9:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_90.append(new_obj)
+                    context = top_90
+                    #students with 80% and higher
+                elif int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_90.append(new_obj)
+                    context = top_90
+                    #students with 70% and higher
+                elif int(mark) >= 70 and int(mark)  < 80 and score >= 0.7 and score < 0.8:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_90.append(new_obj)
+                    context = top_90
+            if grade == "B" and cat == "positive":
+                #students with 60% and higher
+                if int(mark) >= 60 and int(mark)  < 70 and score >= 0.6 and score < 0.7:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_90.append(new_obj)
+                    context = top_90
+            if grade == "C" and cat == "negative":
+                #students with 50% and higher
+                if int(mark) >= 50 and int(mark) < 60 and score >= 0.5 and score < 0.7:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_80.append(new_obj)
+                    context = top_80
+            if grade == "D" and cat == "negative":
+                #students with 50% and higher
+                if int(mark) >= 40 and int(mark) < 50 and score >= 0.7 and score < 0.8:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_80.append(new_obj)
+                    context = top_80
+            if grade == "Fail" and cat == "negative":
+                #students with Fail
+                if int(mark) >= 0 and int(mark) < 40 and score >= 0.8 and score <= 0.9:
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat
+                                }
+                    top_80.append(new_obj)
+                    context = top_80
+            
         print(test + " " + mark + " " + correct)
         print("fg")
         #context = [self.final_feedback_given, self.final_feedback_score, self.final_feedback_category]

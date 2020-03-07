@@ -11,21 +11,29 @@ class ReviewFeedback extends React.Component{
         this.state = {
             data: [],
             showFeedback: false,
+            improvement: false,
             effectiveness: ""
         }
     }
     componentDidMount(){
         const testName = this.props.match.params.testid
+        const testGrade = this.props.match.params.testgrade
         const testMark = this.props.match.params.testmark
         const correct = this.props.match.params.correct
         const incorrect = this.props.match.params.incorrect
         let test_id = 0
         let final_effect = ""
-        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testMark}/${correct}`)
+        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}`)
         .then(res => {
             console.log(res.data)
             var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
             console.log(random_feedback)
+            if(random_feedback.category == "negative")
+            {
+              this.setState({
+                improvement: true,
+              })
+            }
             this.setState({
                 data: random_feedback,
                 showFeedback: true
@@ -34,16 +42,22 @@ class ReviewFeedback extends React.Component{
         })
         
     }
-    generateFeedback(testName, testMark, correct){
+    generateFeedback(testName, testGrade, testMark, correct){
         console.log("hi yes!!")
         
         this.setState({
             showFeedback: false,
         })
-        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testMark}/${correct}`)
+        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}`)
         .then(res => {
             console.log(res.data)
             var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
+            if(random_feedback.category == "negative")
+            {
+              this.setState({
+                improvement: true,
+              })
+            }
             this.setState({
                 data: random_feedback,
                 showFeedback: true
@@ -73,12 +87,14 @@ class ReviewFeedback extends React.Component{
                   <Col span={8}>
                     <Card bordered style={{color: 'blue'}} title="Feedback Score & other information" bordered={false}>
                       Percentage: {this.state.showFeedback ? this.state.data.score : <Spin indicator={antIcon} />} <br/>
-                      Outcome: {this.state.showFeedback ? this.state.data.category : <Spin indicator={antIcon} />} <br />
+                      Outcome of the generator: {this.state.showFeedback ? this.state.data.category : <Spin indicator={antIcon} />} <br />
+                      {this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <p>Needs improvement</p> : <p>Is doing very well</p>}</p> : null} 
                     </Card>
+                    
                   </Col>
                 </Row>
                 <div className="btnFeedback">
-                    <Button style={{margin: '5px'}} type="primary" onClick={(e) => this.generateFeedback(this.props.match.params.testid, this.props.match.params.testmark, this.props.match.params.correct)}>Generate another feedback?</Button>
+                    <Button style={{margin: '5px'}} type="primary" onClick={(e) => this.generateFeedback(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct)}>Generate another feedback?</Button>
                     <Link to={`/generatefeedback/` + this.props.match.params.testid + `/` + this.props.match.params.userid}><Button style={{margin: '5px'}} type="primary">Happy to see the full result?</Button></Link>
                 </div>
             </div>

@@ -34,7 +34,7 @@ class GradeForm extends React.Component {
   handleFormSubmit = (e, requestMethod, testID) => {
       e.preventDefault();
       let grade = " ";
-      const effectiveness = "";
+      let effectiveness = "";
       const total = e.target.elements.total_mark.value;
       const total_sub = e.target.elements.total_sub.value;
       const final_mark = parseInt((total_sub/total)*100)
