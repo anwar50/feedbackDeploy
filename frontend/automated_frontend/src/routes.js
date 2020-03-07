@@ -36,7 +36,7 @@ const BaseRouter = (props) => (
             <Route exact path="/home" component={Home} />
             <Route exact path="/savedtests/:id" component={SavedTests} />
             <Route exact path="/savedfeedbacks/:id" component={SavedFeedback} />
-            <Route exact path="/generatefeedback/:id/:userid" component={GeneratedFeedback} />
+            <Route exact path="/generatefeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:score/:feedback/:userid" component={GeneratedFeedback} />
             <Route exact path="/feedbackInfo/:id/:userid" component={FeedbackInformation} />  
             <Route exact path="/createFeedback/:testid/:userid" component={CreateFeedback} /> 
             <Route exact path="/reviewFeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:userid" component={ReviewFeedback} />

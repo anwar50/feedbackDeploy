@@ -184,11 +184,7 @@ class GeneratedFeedback extends React.Component {
               random_percentage = item.percentage
           }
         })
-        console.log(random_feedback)
-        function generateFeedback(){
-            console.log("f")
-        }
-
+        
         const columns = [{
             title: 'Test Name',
             dataIndex: 'test',
@@ -237,30 +233,29 @@ class GeneratedFeedback extends React.Component {
             render: (text, record) => (
               <span>
                 {/* <a href="#">Action 一 {record.test}</a> */}
-                 <Button onClick={(e) => this.saveFeedback(record.test, record.grade)} type="primary" htmlType="submit">Save Feedback</Button>
-                 <Button onClick={(e) => this.handleSave(record.test, record.grade, random_feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
-                {/*<Divider type="vertical" />
-                <Link to={`/createFeedback/` + record.test}><Button type="primary" htmlType="submit">Write your own feedback</Button></Link>
+                <Button onClick={(e) => this.handleSave(record.test, record.grade, this.props.match.params.feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
                 <Divider type="vertical" />
                 <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedback</Button></CSVLink>
-            */}</span>
+           </span>
             ),
           }];
           const testInfo = [{
             key: '1',
-            test: id,
-            grade: test_grade,
-            feedback: random_feedback,
-            percentage: random_percentage + "%"
+            test: this.props.match.params.testid,
+            grade: this.props.match.params.testgrade,
+            feedback: this.props.match.params.feedback,
+            percentage: this.props.match.params.score + "%"
           }];
         return(
             <div>
                 <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
                   <strong>Your feedback has been saved!</strong> Go check your saved feedbacks to check them out!!
                 </div>
-                <Link to={`/feedbackInfo/` + id + '/' + this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
+                <Link to={`/reviewFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` +this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
                 <Table columns={columns} dataSource={testInfo} />
-                <Link to={`/createFeedback/` + id + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
+                <div style={{marginLeft: '40%', marginRight: '50%'}} >
+                  <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
+                </div>
             </div>
         )
     }
