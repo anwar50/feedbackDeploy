@@ -200,6 +200,10 @@ class NLTKProcess(View):
         file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
             #process the data from the json file and store in array for the model
         Reviews = []
+        top_90 = []
+        top_80 = []
+        top_70 = []
+        top_60 = []
         with open(file[0]) as data:
             read_data = data.read()
             for review in read_data.split('\n'):
@@ -265,13 +269,19 @@ class NLTKProcess(View):
         train = Training_Data
         for review, score, cat in zip( reviews, sentiment_score, sentiment_cat):
             if int(mark) >= 90 and score >= 0.9 and cat == "positive":
+                new_obj = {'score': score,
+                            'review': review,
+                            'category': cat
+                            }
+                top_90.append(new_obj)
+                context = top_90
                 self.final_feedback_score = score
-                self.final_feedback_given = review  
-                self.final_feedback_category = cat
-            # elif int(mark) >= 80 and score > 0.8 and score < 0.9 and cat == "positive":
-            #     self.final_feedback_score = score
-            #     self.final_feedback_given = review
-            #     self.final_feedback_category = cat 
+                self.final_feedback_given = review
+                self.final_feedback_category = cat 
+            if int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9 and cat == "positive":
+                self.final_feedback_score = score
+                self.final_feedback_given = review
+                self.final_feedback_category = cat 
             # elif int(mark) >= 70 or int(mark) >= 60 and score >= 0.7 or score >= 0.6 and score < 0.8 and cat == "positive":
             #     self.final_feedback_score = score
             #     self.final_feedback_given = review
@@ -285,7 +295,7 @@ class NLTKProcess(View):
             #     self.final_feedback_score = 0
         print(test + " " + mark + " " + correct)
         print("fg")
-        context = [self.final_feedback_given, self.final_feedback_score, self.final_feedback_category]
+        #context = [self.final_feedback_given, self.final_feedback_score, self.final_feedback_category]
         return JsonResponse(context, safe = False)
 
 

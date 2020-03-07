@@ -24,8 +24,10 @@ class ReviewFeedback extends React.Component{
         axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testMark}/${correct}`)
         .then(res => {
             console.log(res.data)
+            var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
+            console.log(random_feedback)
             this.setState({
-                data: res.data,
+                data: random_feedback,
                 showFeedback: true
             })
             
@@ -41,8 +43,9 @@ class ReviewFeedback extends React.Component{
         axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testMark}/${correct}`)
         .then(res => {
             console.log(res.data)
+            var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
             this.setState({
-                data: res.data,
+                data: random_feedback,
                 showFeedback: true
             })
         })
@@ -64,14 +67,13 @@ class ReviewFeedback extends React.Component{
                   </Col>
                   <Col span={5}>
                     <Card bordered style={{ color: 'blue'}} title="Feedback for this test" bordered={false}>
-                      {this.state.showFeedback ? this.state.data[0] : <Spin indicator={antIcon} />}
+                      {this.state.showFeedback ? this.state.data.review : <Spin indicator={antIcon} />}
                     </Card>
                   </Col>
                   <Col span={8}>
                     <Card bordered style={{color: 'blue'}} title="Feedback Score & other information" bordered={false}>
-                      Percentage: {this.state.showFeedback ? this.state.data[1] : <Spin indicator={antIcon} />} <br/>
-                      Outcome: {this.state.showFeedback ? this.state.data[2] : <Spin indicator={antIcon} />} <br />
-                      Effectiveness: {this.state.showFeedback ? this.state.effectiveness : <Spin indicator={antIcon} />}
+                      Percentage: {this.state.showFeedback ? this.state.data.score : <Spin indicator={antIcon} />} <br/>
+                      Outcome: {this.state.showFeedback ? this.state.data.category : <Spin indicator={antIcon} />} <br />
                     </Card>
                   </Col>
                 </Row>
