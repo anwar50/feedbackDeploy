@@ -125,9 +125,9 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="3">
                     <Link to="/grade">Grade Mechanism</Link>
                 </Menu.Item>
-                <Menu.Item key="5">
+                {/* <Menu.Item key="5">
                     <Link to="/feedbackInfo">Feedback Mechanism</Link>
-                </Menu.Item>
+                </Menu.Item> */}
             </Menu>
             </Header>
             <Content style={{ padding: '0 50px' }}>
