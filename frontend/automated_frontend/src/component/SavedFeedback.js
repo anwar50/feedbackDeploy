@@ -1,5 +1,5 @@
 import React from "react"
-import { List, Typography, Table, Icon, Divider, Button, Alert, Input} from 'antd';
+import { List, Typography, Table, Icon, Divider, Button, Alert, Input, Modal} from 'antd';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Highlighter from 'react-highlight-words';
@@ -61,14 +61,21 @@ class SavedFeedback extends React.Component {
         }) 
         if(found)
         {
-            this.setState({
-                showingAlert: true
+            let secondsToGo = 10;
+            const modal = Modal.success({
+              title: 'The feedback  ' + e + ' has been deleted! ',
+              content: ``,
             });
+            const timer = setInterval(() => {
+              secondsToGo -= 1;
+              modal.update({
+                content: `This message will be destroyed after ${secondsToGo} seconds.`,
+              });
+            }, 1000);
             setTimeout(() => {
-                this.setState({
-                  showingAlert: false,
-                });
-            }, 5000);
+              clearInterval(timer);
+              modal.destroy();
+            }, secondsToGo * 1000);
         }
         else
         {
@@ -326,9 +333,6 @@ class SavedFeedback extends React.Component {
             
             <div>
               <h1 style={{textAlign: 'center'}}>Welcome back {this.props.match.params.id.toUpperCase()} heres a collection of your saved feedbacks!</h1>
-              <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
-                <strong>Your feedback has been deleted!</strong>
-              </div>
               <Table columns={columns} dataSource={testInfo} />
             </div>
         )

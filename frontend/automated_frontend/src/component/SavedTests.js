@@ -1,5 +1,5 @@
 import React from "react"
-import { List, Typography, Table, Icon, Divider, Button, Input} from 'antd';
+import { List, Typography, Table, Icon, Divider, Button, Input, Modal} from 'antd';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Highlighter from 'react-highlight-words';
@@ -63,6 +63,7 @@ class SavedTests extends React.Component {
         console.log(e)
         let TESTID = 0
         let found = false
+        
         this.state.test.map(function(item, i){
             if(item.name == e)
             {
@@ -75,14 +76,21 @@ class SavedTests extends React.Component {
         }) 
         if(found)
         {
-            this.setState({
-                showingAlert: true
-              });
-              setTimeout(() => {
-                this.setState({
-                  showingAlert: false,
-                });
-              }, 5000);
+          let secondsToGo = 10;
+          const modal = Modal.success({
+            title: 'Test for ' + e + ' has been deleted',
+            content: `...`,
+          });
+          const timer = setInterval(() => {
+            secondsToGo -= 1;
+            modal.update({
+              content: `This message will be destroyed after ${secondsToGo} seconds.`,
+            });
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(timer);
+            modal.destroy();
+          }, secondsToGo * 1000);
         }
         else
         {
@@ -336,9 +344,6 @@ class SavedTests extends React.Component {
         return(
             
             <div>
-            <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
-                <strong>This test has been deleted!</strong>
-            </div>
               <h1 style={{textAlign: 'center'}}>Welcome back {this.props.match.params.id.toUpperCase()} heres a summary of your saved tests!</h1>
                 <Table columns={columns} dataSource={testInfo} />
                 {this.state.showPopup ?  

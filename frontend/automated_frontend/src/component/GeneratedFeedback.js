@@ -1,7 +1,7 @@
 import React from "react"
 import {Link} from "react-router-dom";
 import axios from "axios";
-import { Form, Button, Table, Divider, RollbackOutlined } from "antd";
+import { Form, Button, Table, Divider, RollbackOutlined, Modal } from "antd";
 import {CSVLink, CSVDownload} from 'react-csv';
 import '../css/Layout.css';
 class GeneratedFeedback extends React.Component {
@@ -79,15 +79,29 @@ class GeneratedFeedback extends React.Component {
                     percentage: percentage,
                     created_by: "Feedback generator",
             })
-            this.setState({
-              showingAlert: true
+            // this.setState({
+            //   showingAlert: true
+            // });
+            // setTimeout(() => {
+            //   this.setState({
+            //     showingAlert: false,
+            //   });
+            // }, 5000);
+            let secondsToGo = 10;
+            const modal = Modal.success({
+              title: 'Feedback for ' + test + ' has been saved! Go check your saved feedbacks to check them out!!',
+              content: `Your feedback has been saved! Go check your saved feedbacks to check them out!!`,
             });
-            setTimeout(() => {
-              this.setState({
-                showingAlert: false,
+            const timer = setInterval(() => {
+              secondsToGo -= 1;
+              modal.update({
+                content: `This message will be destroyed after ${secondsToGo} seconds.`,
               });
-            }, 5000);
-            
+            }, 1000);
+            setTimeout(() => {
+              clearInterval(timer);
+              modal.destroy();
+            }, secondsToGo * 1000);
         }
         else
         {
@@ -248,9 +262,6 @@ class GeneratedFeedback extends React.Component {
           }];
         return(
             <div>
-                <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
-                  <strong>Your feedback has been saved!</strong> Go check your saved feedbacks to check them out!!
-                </div>
                 <Link to={`/reviewFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` +this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
                 <Table columns={columns} dataSource={testInfo} />
                 <div style={{marginLeft: '40%', marginRight: '50%'}} >
