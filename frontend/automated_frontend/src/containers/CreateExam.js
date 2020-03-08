@@ -34,7 +34,7 @@ class CreateExam extends React.Component{
             <div>
                 
         <h2 style={{display: 'flex', justifyContent: 'center'}} >Enter Exam information here for {title}!</h2>
-                    {/* <Button onClick={this.handleClick} style={{justifyContent:'center'}}>Enter a module that you teach!</Button> */}
+                   
                     {console.log(this.props.match.params.id)}
                     <ExamForm requestMethod="post"
                         moduleID={this.props.match.params.id}

@@ -165,40 +165,13 @@ class SavedFeedback extends React.Component {
                 test_id.push(item.module)
             }
         })
-        //console.log(TEMPTEST)
-            //retrieving the grades of all the tests
-        // this.state.grades.map(function(item, index){
-        //     let temp_test = {}
-        //     TEMPTEST.map(function(testID, i){
-        //         savedtests.map(function(TestID, i){
-        //             if(item.test == TestID && testID.id == TestID )
-        //             {
-        //                 //savedGrades.push(item.grade)
-        //                 temp_test = {
-        //                     key: index,
-        //                     name: testID.name,
-        //                     address: item.grade,
-        //                 }
-        //             }
-        //             if(item.test == "")
-        //             {
-        //                 console.log(testID.name)
-        //             }
-        //         })
-        //     })
-        //     testInfo.push(temp_test)
-        // })
+        
         this.state.test.map(function(item, i){
             savedtests.map(function(testID, i){
                 if(item.id == testID)
                 {
                     testNames.push(item.name);
-                    // testInfo.push({
-                    //     key: i,
-                    //     name: 'John Brown',
-                    //     age: item.name,
-                    //     address: 'New York No. 1 Lake Park',
-                    // })
+                   
                     modulei_ids.push(item.module)
                 }
             })
@@ -237,36 +210,13 @@ class SavedFeedback extends React.Component {
                 if(item.id == testID)
                 {
                     testNames.push(item.name);
-                    // testInfo.push({
-                    //     key: i,
-                    //     name: 'John Brown',
-                    //     age: item.name,
-                    //     address: 'New York No. 1 Lake Park',
-                    // })
+                    
                     modulei_ids.push(item.module)
                 }
             })
             
         })
-        // this.state.module.map(function(ittem, i){
-        //     modulei_ids.map(function(ModID, i){
-        //         if(ModID == ittem.id)
-        //         {
-        //             moduleNames.push(ittem.title)
-        //         }
-        //     })
-        // })
-        // testNames.map(function(item, index){
-        //     let temp_test = {}
-        //     savedGrades.map(function(grades, i){
-        //         temp_test = {
-        //             key: index,
-        //             name: item,
-        //             address: grades,
-        //         }
-        //     })
-        //     testInfo.push(temp_test)
-        // })
+        
         console.log(testInfo)
         const columns = [{
             title: 'Module Name',

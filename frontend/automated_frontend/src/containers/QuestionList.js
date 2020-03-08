@@ -105,10 +105,7 @@ class TestList extends React.Component {
                     <PageHeader  title={title} subTitle={student_num} />
                     <Table columns={columns} dataSource={data} />
                     <br />
-                    {/* <Button onClick={() => this.handleDelete(question_id, )} type="danger" htmlType="submit">Delete</Button> */}
-                    {/* <Link to={`/questions/` + question_id}>
-                      <Button type="primary" htmlType="submit">Update</Button>
-                    </Link> <br></br> */}
+                    
                 </div>    
             )
     }

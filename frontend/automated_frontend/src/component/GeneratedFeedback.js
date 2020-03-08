@@ -128,67 +128,8 @@ class GeneratedFeedback extends React.Component {
         let max = this.state.generatedFeedback.length
         let randNum = Math.floor(Math.random()*(max-min+1)+min)
         let final_generated_feedback = []
-            //first get the id of the test based on the test name given
-        this.state.test.map(function(item, i){
-            if(item.name == id)
-            {
-                test_id = item.id
-            }
-        })
-        this.state.grades.map(function(item, i){
-            if(item.test == test_id)
-            {
-                test_grade = item.grade
-                test_mark = item.grade_mark
-            }
-        })
-        this.state.answers.map(function(item, i){
-          if(test_id == item.test)
-          {
-            correct_answers = item.total_sub_marks
-          }
-        })
-        this.state.generatedFeedback.map(function(item, i){
-                if(test_grade == "A" && item.category == "positive" )
-                {
-                    if(test_mark >= 90 && correct_answers >= 90 && item.percentage >= 90)
-                    {
-                      final_generated_feedback.push(item.feedback_bank)
-                    }
-                    else if(test_mark >= 80 && correct_answers >= 80 && (item.percentage >= 80 && item.percentage < 90))
-                    {
-                      final_generated_feedback.push(item.feedback_bank)
-                    }
-                    else if(test_mark >= 70 && correct_answers >= 70 && (item.percentage >= 70 && item.percentage < 80))
-                    {
-                      final_generated_feedback.push(item.feedback_bank)
-                    }
-                }
-                else if(test_grade == "B" && item.category == "positive")
-                {
-                    if(test_mark >= 60 && correct_answers >= 60 && (item.percentage >= 60 && item.percentage < 70))
-                    {
-                      final_generated_feedback.push(item.feedback_bank)
-                    }
-                    else if(test_mark >= 50 && correct_answers >= 50 && (item.percentage >= 50 && item.percentage < 60))
-                    {
-                      final_generated_feedback.push(item.feedback_bank)
-                    }
-                    
-                }   
-                else if(test_grade == "C" && item.category == "negative" && (item.percentage > 50))
-                {
-                    final_generated_feedback.push(item.feedback_bank)
-                }
-                else if(test_grade == "D" && item.category == "negative" && (item.percentage > 70))
-                {
-                    final_generated_feedback.push(item.feedback_bank)
-                }
-                else if(test_grade == "Fail" && item.category == "negative")
-                {
-
-                }
-        })
+            
+        
             //randomly generate a feedback whether its positive or negative
         var random_feedback = final_generated_feedback[Math.floor(Math.random()*final_generated_feedback.length)];
         var random_percentage = 0

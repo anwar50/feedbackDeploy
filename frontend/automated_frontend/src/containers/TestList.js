@@ -122,34 +122,7 @@ class TestList extends React.Component {
                 student_num = item.num_students
             }
         })}
-        // const columns = [
-        //     {
-        //       title: 'Name of test',
-        //       dataIndex: 'question',
-        //       key: 'question',
-        //       render: text => <a>{text}</a>,
-        //     },
-        //     {
-        //       title: 'Number of questions',
-        //       dataIndex: 'test_count',
-        //       key: 'test_count',
-        //     },
-        //     {
-        //       title: 'Description of test',
-        //       dataIndex: 'description',
-        //       key: '',
-        //     },
-        //     {
-        //       title: 'Type of question',
-        //       dataIndex: 'question_type',
-        //       key: '',
-        //     },
-        //     {
-        //       title: 'Date created',
-        //       dataIndex: 'date_creation',
-        //       key: '',
-        //     },
-        //   ];
+        
         const columns = [{
           title: 'Test Name',
           dataIndex: 'question',
