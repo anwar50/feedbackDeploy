@@ -94,10 +94,12 @@ class ReviewFeedback extends React.Component{
                     
                   </Col>
                 </Row>
-                <div className="btnFeedback" style={{marginLeft: '40%', marginRight: '50%'}}>
+                <div className="btnFeedback" style={{marginLeft: '40px', marginRight: '50%', margin: '8px'}}>
                     <Button style={{margin: '5px'}} type="primary" onClick={(e) => this.generateFeedback(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct)}>Generate another feedback?</Button>
+                    <Link to={`/chooseExistingFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.props.match.params.userid}><Button style={{margin: '5px'}} type="primary">Choose from a batch of feedbacks?</Button></Link>
                     <Link to={`/generatefeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.state.data.score + `/` + this.state.data.review + `/` + this.props.match.params.userid}><Button style={{margin: '5px'}} type="primary">Happy to see the full result?</Button></Link>
                 </div>
+                
             </div>
         )
     }
