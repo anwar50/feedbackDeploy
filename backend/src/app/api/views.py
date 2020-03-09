@@ -213,6 +213,7 @@ class NLTKProcess(View):
             #process the data from json into a list of tuples
         reviewFrame = []
         # for review in Reviews[:50]:
+            #use the first 5000 reviews in the reviews dataset.
         for review in Reviews[:50]:
             try:
                 jsondata = json.loads(review)

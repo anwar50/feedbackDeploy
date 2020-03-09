@@ -67,10 +67,24 @@ class ChooseExistingFeedback extends React.Component{
             })
         })
     }
-    handleFormSubmit = (e) => {
+    handleFormSubmit = (e, testName, testGrade, testMark, correct) => {
         e.preventDefault();
         const total = e.target.elements.amount.value;
+        let random_data = [];
         console.log(total);
+        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}`)
+        .then(res => {
+            console.log(res.data)
+            var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
+            for(let i = 0; i < total; i++)
+            {
+                var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
+                random_data.append(random_feedback);
+            }
+            this.setState({
+                data: random_data
+            })
+        })
         this.setState({
             feedbackAmountState: true,
         })
@@ -100,19 +114,31 @@ class ChooseExistingFeedback extends React.Component{
                     </Card>
                   </Col>
                   <Col span={5}>
-                    <Card bordered style={{ color: 'blue'}} title="Feedback for this test" bordered={false}>
+                    <Card bordered style={{ color: 'blue'}} title="Feedback one" bordered={false}>
                       
                     </Card>
                   </Col>
                   <Col span={8}>
-                    <Card bordered style={{color: 'blue'}} title="Feedback Score & other information" bordered={false}>
+                    <Card bordered style={{color: 'blue'}} title="Feedback three" bordered={false}>
+                      
+                    </Card>
+                    
+                  </Col>
+                  <Col span={8}>
+                    <Card bordered style={{color: 'blue'}} title="Feedback four" bordered={false}>
+                        {this.state.data}
+                    </Card>
+                    
+                  </Col>
+                  <Col span={8}>
+                    <Card bordered style={{color: 'blue'}} title="Feedback five" bordered={false}>
                       
                     </Card>
                     
                   </Col>
                 </Row>
                  : 
-                 <Form onSubmit={(event) => this.handleFormSubmit(event)}>
+                 <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct)}>
                     <Form.Item label="How many feedbacks would you like to see? (maximum 5)">
                         <Input type="number" name="amount" pattern="[0-5]*" onKey Press={this.onKeyPress.bind(this)} />
                     </Form.Item>
