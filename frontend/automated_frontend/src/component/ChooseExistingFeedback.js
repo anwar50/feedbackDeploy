@@ -16,7 +16,7 @@ class ChooseExistingFeedback extends React.Component{
             effectiveness: "",
             feedbackAmount: 0,
             feedbackAmountState: false,
-            collectionFeedback: false,
+            collectionFeedback: true,
         }
     }
     componentDidMount(){
@@ -86,11 +86,13 @@ class ChooseExistingFeedback extends React.Component{
                 random_data.push(random_feedback)
             }
             this.setState({
-                data: random_data
+                data: random_data,
+                collectionFeedback: false,
             })
         })
         this.setState({
             feedbackAmountState: true,
+            feedbackAmount: total
         })
     }
     onKeyPress(event) {
@@ -130,14 +132,13 @@ class ChooseExistingFeedback extends React.Component{
       let user = this.props.match.params.userid
         return(
             <div >
-              
-                {
                 
+                {
                 this.state.feedbackAmountState ? 
                     
                 <Row gutter={10} justify="space-around" type="flex">
                   <Col span={5}>
-                    <Card bordered style={{color: 'blue'}} title="Test Information" bordered={false}>
+                    <Card bordered style={{color: 'blue'}} title="Test Information" bordered={true}>
                       <Text strong>Test Name:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testid}</Text> <br/>
                       <Text strong>Test Grade:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testgrade}</Text> <br />
                       <Text strong>Test Mark:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testmark} %</Text> <br/>
@@ -145,6 +146,11 @@ class ChooseExistingFeedback extends React.Component{
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/>
                     </Card>
                   </Col>
+                  {
+                    this.state.collectionFeedback ?
+                   <div>Please wait whilst {this.state.feedbackAmount} feedbacks are being generated!<Spin indicator={antIcon} /></div>
+                    :
+                    <div style={{type: 'flex', justifyContent: 'center'}}>
                       {this.state.data.map(function(item, i){
                         let title = "Feedback " + (i+1)
                         let review = item.review
@@ -171,6 +177,7 @@ class ChooseExistingFeedback extends React.Component{
                             //`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + userid
                         }
                         let score = Math.round(item.score * 100)
+                        
                         return(
                           <Col span={5}>
                             <Card bordered style={{ color: 'blue'}} title={title} bordered={false}>
@@ -184,6 +191,9 @@ class ChooseExistingFeedback extends React.Component{
                           
                         )
                       })}
+                    </div>
+                  }
+                      
                   
                 </Row>
                  : 
