@@ -67,6 +67,7 @@ class ReviewFeedback extends React.Component{
     }
     render()
     {
+      let score = Math.round(this.state.data.score * 100)
         return(
             <div >
                 
@@ -87,7 +88,7 @@ class ReviewFeedback extends React.Component{
                   </Col>
                   <Col span={8}>
                     <Card bordered style={{color: 'blue'}} title="Feedback Score & other information" bordered={false}>
-                      <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.data.score}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.data.category}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <p>Needs improvement!</p> : <p>Is doing very well!</p>}</p> : null} </Text>
                     </Card>

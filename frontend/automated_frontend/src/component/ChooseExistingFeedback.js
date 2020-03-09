@@ -170,11 +170,12 @@ class ChooseExistingFeedback extends React.Component{
                                 }, secondsToGo * 1000);
                             //`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + userid
                         }
+                        let score = Math.round(item.score * 100)
                         return(
                           <Col span={5}>
                             <Card bordered style={{ color: 'blue'}} title={title} bordered={false}>
-                                <Text strong>{item.review}</Text><br />
-                                <Text strong>{item.score}</Text>
+                                <Text type="warning" strong>Review: </Text><Text strong>{item.review}</Text><br />
+                                <Text type="warning" strong>Score: </Text><Text strong>{score}</Text>
                             </Card>
                             
                             <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link>
