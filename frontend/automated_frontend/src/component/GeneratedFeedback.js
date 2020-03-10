@@ -194,13 +194,13 @@ class GeneratedFeedback extends React.Component {
            </span>
             ),
           }];
-          let score = Math.round(this.props.match.params.score * 100)
+          //let score = Math.round(this.props.match.params.score * 100)
           const testInfo = [{
             key: '1',
             test: this.props.match.params.testid,
             grade: this.props.match.params.testgrade,
             feedback: this.props.match.params.feedback,
-            percentage: score + "%"
+            percentage: this.props.match.params.score + "%"
           }];
         return(
             <div>

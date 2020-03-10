@@ -1,5 +1,5 @@
 import React from "react"
-import { List, Typography, Table, Icon, Divider, Button, Input, Modal} from 'antd';
+import { List, Typography, Table, Icon, Divider, Button, Input, Modal, Form} from 'antd';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Highlighter from 'react-highlight-words';
@@ -22,22 +22,150 @@ class SavedTests extends React.Component {
             showPopup: false,
             showPopupGrade: false,
             testName: "",
-            moduleName: ""
+            moduleName: "",
+            test_id: 0
         }
     }
+    handleGradeSubmit(e, requestMethod, test, moduleName){
+      e.preventDefault();
+      let grade = " ";
+      let effectiveness = "";
+      const total = e.target.elements.total_mark.value;
+      const total_sub = e.target.elements.total_sub.value;
+      const final_mark = parseInt((total_sub/total)*100)
+      if(final_mark >= 70 && final_mark <= 100)
+      {
+        grade = "A";
+        effectiveness = "Outstanding";
+      }
+      else if(final_mark >= 60 && final_mark <= 69)
+      {
+        grade = "B";
+        effectiveness = "Good";
+      }
+      else if(final_mark >= 50 && final_mark <= 59)
+      {
+        grade = "C";
+        effectiveness = "Need Improvement";
+      }
+      else if(final_mark >= 45 && final_mark <= 49)
+      {
+        grade = "D";
+        effectiveness = "Poor";
+      }
+      else
+      {
+        grade = "Fail";
+        effectiveness = "Fail";
+      }
+      console.log(test + " " + total + " " + total_sub + " " + final_mark)
+      let TESTID = 0;
+      axios.get(`http://127.0.0.1:8000/api/test`)
+      .then(res => {
+          res.data.map(function(item, i){
+            if(item.name == test)
+            {
+              TESTID = item.id
+            }
+          })
+          console.log(TESTID)
+        switch(requestMethod) {
+          case 'post':
+            axios.post(`http://127.0.0.1:8000/api/create/grade/`, {
+              grade: grade,
+              grade_mark: final_mark,
+              effectiveness: effectiveness,
+              test: TESTID
+            })
+            .then(res => {
+              console.log(res) 
+              axios.post('http://127.0.0.1:8000/api/create/answer/', {
+                test: TESTID,
+                total_mark_for_question: total,
+                total_sub_marks: total_sub
+              })
+                .then(res => {
+                  console.log(res)
+                })
+                this.setState({
+                    showingAlert: true
+                });
+                setTimeout(() => {
+                    this.setState({
+                      showingAlert: false,
+                    });
+                }, 5000);
+                //redirect to home page after creating
+              //window.location = '/Grade'
+            })
+            .catch(err => console.log(err))
+          case 'put':
+              // axios.put(`http://127.0.0.1:8000/api/module/${moduleID}/update/`, {
+                
+              // })
+              // .then(res => console.log(res))
+              // .catch(err => console.log(err))
+              return null
+        }
+      })
+      
+    }
+    onKeyPress(event) {
+      const keyCode = event.keyCode || event.which;
+      const keyValue = String.fromCharCode(keyCode);
+       if (/\+|-/.test(keyValue))
+         event.preventDefault();
+    } 
     toggle = (test, mod) =>{
-      this.setState({
-        showPopup: !this.state.showPopup,
-        testName: test,
-        moduleName: mod,
-      });
+
+      
+      // this.setState({
+      //   showPopup: !this.state.showPopup,
+      //   testName: test,
+      //   moduleName: mod,
+      // });
     }
     toggleGrade = (test, mod) =>{
-      this.setState({
-        showPopupGrade: !this.state.showPopupGrade,
-        testName: test,
-        moduleName: mod
+      let secondsToGo = 600;
+      
+      const modal = Modal.success({
+        title: `This message will be destroyed after ${secondsToGo} seconds` ,
+        content: '',
       });
+      const timer = setInterval(() => {
+        secondsToGo -= 1;
+        modal.update({
+          content: 
+          <div style={{color: 'red'}}> 
+          <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
+               <strong>The grade Information has been saved! </strong> Go check your saved tests!!
+          </div> 
+          <div >  
+          <h2 style={{display: 'flex', justifyContent: 'center'}} >Update grade Information {test} here!</h2>
+            <Form onSubmit={(event) => this.handleGradeSubmit(event, "post", test)}>
+              <Form.Item label="Total mark for all questions">
+                <Input type="number" name="total_mark" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
+              </Form.Item>
+              <Form.Item label="Total mark given to students for sub questions">
+                  <Input type="number" name="total_sub" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
+              </Form.Item>
+              <Form.Item>
+              <Button type="primary" htmlType="submit">Update Grade</Button>
+            </Form.Item>
+          </Form>
+          </div>  
+      </div> ,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+      }, secondsToGo * 1000);
+      // this.setState({
+      //   showPopupGrade: !this.state.showPopupGrade,
+      //   testName: test,
+      //   moduleName: mod
+      // });
     }
     componentDidMount(){
         axios.all([

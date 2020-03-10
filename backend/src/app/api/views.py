@@ -194,8 +194,9 @@ class NLTKProcess(View):
     final_feedback_score = 0
     final_sentiment_score = 0
     final_feedback_category = ""
-    def get(self, request, test, grade, mark, correct):
-        
+    def get(self, request, test, grade, mark, correct, incorrect):
+        #total marks for the test
+        totalMarks = int(incorrect) + int(correct)
             #PROCESSING TRAINGING MODEL
         file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
             #process the data from the json file and store in array for the model
@@ -204,6 +205,11 @@ class NLTKProcess(View):
         top_80 = []
         top_70 = []
         top_60 = []
+            #top improvment feedbacks
+        top_90_improv = []
+        top_80_improv = []
+        top_70_improv = []
+        top_60_improv = []
         with open(file[0]) as data:
             read_data = data.read()
             for review in read_data.split('\n'):
@@ -272,12 +278,29 @@ class NLTKProcess(View):
             if grade == "A" and cat == "positive":
                     #students with 90% and higher
                 if int(mark) >= 90 and score >= 0.9:
+                    print(int(totalMarks/2))
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat
                                 }
                     top_90.append(new_obj)
                     context = top_90
+                        #check if the incorrect answers is above the half point, give an improvement feedback
+                    if int(incorrect) >= (int(totalMarks/2)) and score >= 0.95:
+                        print("entered ")
+                        new_obj = {'score': score,
+                                    'review': review,
+                                    'category': cat
+                                    }
+                        top_90_improv.append(new_obj)
+                        improvmentFeedback = top_90_improv
+                    elif int(incorrect) < (int(totalMarks/2)) and score < 0.95 and score > 0.9:
+                        new_obj = {'score': score,
+                                    'review': review,
+                                    'category': cat
+                                    }
+                        top_90_improv.append(new_obj)
+                        improvmentFeedback = top_90_improv
                     #students with 80% and higher
                 elif int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9:
                     new_obj = {'score': score,
@@ -305,7 +328,7 @@ class NLTKProcess(View):
                     context = top_90
             if grade == "C" and cat == "negative":
                 #students with 50% and higher
-                if int(mark) >= 50 and int(mark) < 60 and score >= 0.5 and score < 0.7:
+                if int(mark) >= 50 and int(mark) < 60 and score >= -0.5 and score < -0.7:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat
@@ -314,7 +337,7 @@ class NLTKProcess(View):
                     context = top_80
             if grade == "D" and cat == "negative":
                 #students with 50% and higher
-                if int(mark) >= 40 and int(mark) < 50 and score >= 0.7 and score < 0.8:
+                if int(mark) >= 40 and int(mark) < 50 and score >= -0.7 and score < -0.8:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat
@@ -323,7 +346,7 @@ class NLTKProcess(View):
                     context = top_80
             if grade == "Fail" and cat == "negative":
                 #students with Fail
-                if int(mark) >= 0 and int(mark) < 40 and score >= 0.8 and score <= 0.9:
+                if int(mark) >= 0 and int(mark) < 40 and score >= -0.8 and score <= -0.9:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat
@@ -334,7 +357,8 @@ class NLTKProcess(View):
         print(test + " " + mark + " " + correct)
         print("fg")
         #context = [self.final_feedback_given, self.final_feedback_score, self.final_feedback_category]
-        return JsonResponse(context, safe = False)
+        final_context = [context, improvmentFeedback]
+        return JsonResponse(final_context, safe = False)
 
 
 

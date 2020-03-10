@@ -92,7 +92,7 @@ class Modules extends React.Component {
                 <div>
                   <Link to={`/createExam/` + item.id + '/' + this.props.user}>
                     <Button onClick={this.examCreate}>
-                        Create A Test
+                        Create a Test
                     </Button> 
                   </Link>
                 </div>

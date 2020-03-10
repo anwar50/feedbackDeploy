@@ -68,21 +68,23 @@ class ChooseExistingFeedback extends React.Component{
             })
         })
     }
-    handleFormSubmit = (e, testName, testGrade, testMark, correct) => {
+    handleFormSubmit = (e, testName, testGrade, testMark, correct,incorrect) => {
         e.preventDefault();
         this.setState({
           collectionFeedback: true,
         })
         const total = e.target.elements.amount.value;
         let random_data = [];
+        let temp_feedback = [];
         console.log(total);
-        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}`)
+        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}/${incorrect}`)
         .then(res => {
             console.log(res.data)
-           // var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
+            temp_feedback = res.data[0]
+            // var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
             for(let i = 0; i < total; i++)
             {
-                var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
+                var random_feedback = temp_feedback[Math.floor(Math.random()*temp_feedback.length)];
                 random_data.push(random_feedback)
             }
             this.setState({
@@ -188,16 +190,13 @@ class ChooseExistingFeedback extends React.Component{
                             <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link>
                             
                           </Col>
-                          
                         )
                       })}
                     </div>
                   }
-                      
-                  
                 </Row>
                  : 
-                 <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct)}>
+                 <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect)}>
                     <Form.Item label="How many feedbacks would you like to see? (maximum 5)">
                         <Input type="number" name="amount" pattern="[0-5]*" onKey Press={this.onKeyPress.bind(this)} />
                     </Form.Item>
