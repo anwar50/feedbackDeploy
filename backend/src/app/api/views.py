@@ -285,6 +285,7 @@ class NLTKProcess(View):
                                 }
                     top_90.append(new_obj)
                     context = top_90
+            #quartals 25, 75, 50...
                         #check if the incorrect answers is above the half point, give an improvement feedback
                     if int(incorrect) >= (int(totalMarks/2)) and score >= 0.95:
                         print("entered ")
