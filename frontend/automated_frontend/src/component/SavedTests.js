@@ -61,6 +61,7 @@ class SavedTests extends React.Component {
               axios.put(`http://127.0.0.1:8000/api/test/${TESTID}/update/`, {
                 name: title,
                 test_count: num_questions,
+                num_subquestions: num_sub,
                 description: description,
                 created_date: new Date().toLocaleString(),
                 questiontype: type,
