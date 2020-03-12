@@ -135,7 +135,7 @@ class ChooseExistingFeedback extends React.Component{
             })
         })
     }
-    handleFormSubmit = (e, testName, testGrade, testMark, correct,incorrect) => {
+    handleFormSubmit = (e, testName, testGrade, testMark, correct,incorrect, effect) => {
         e.preventDefault();
         this.setState({
           collectionFeedback: true,
@@ -144,7 +144,7 @@ class ChooseExistingFeedback extends React.Component{
         let random_data = [];
         let temp_feedback = [];
         console.log(total);
-        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}/${incorrect}`)
+        axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}/${incorrect}/${effect}`)
         .then(res => {
             console.log(res.data)
             temp_feedback = res.data[0]
@@ -198,6 +198,7 @@ class ChooseExistingFeedback extends React.Component{
       let correct = this.props.match.params.correct
       let incorrect = this.props.match.params.incorrect
       let score = this.props.match.params.score;
+      let effect = this.props.match.params.effect;
       let user = this.props.match.params.userid
         return(
             <div >
@@ -263,7 +264,7 @@ class ChooseExistingFeedback extends React.Component{
                   }
                 </Row>
                  : 
-                 <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect)}>
+                 <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect, this.props.match.params.effect)}>
                     <Form.Item style={{textAlign: 'center'}} label="How many feedbacks would you like to see? (maximum 5)">
                         <Input size="small" type="number" name="amount" pattern="[0-5]*" onKey Press={this.onKeyPress.bind(this)} />
                         <NumericInput name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
