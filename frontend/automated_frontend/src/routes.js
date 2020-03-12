@@ -40,7 +40,7 @@ const BaseRouter = (props) => (
             <Route exact path="/generatefeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:score/:feedback/:userid" component={GeneratedFeedback} />
             <Route exact path="/feedbackInfo/:id/:userid" component={FeedbackInformation} />  
             <Route exact path="/createFeedback/:testid/:userid" component={CreateFeedback} /> 
-            <Route exact path="/reviewFeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:userid" component={ReviewFeedback} />
+            <Route exact path="/reviewFeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:effect/:userid" component={ReviewFeedback} />
             <Route exact path="/chooseExistingFeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:score/:userid" component={ChooseExistingFeedback} />
         </div>
 )

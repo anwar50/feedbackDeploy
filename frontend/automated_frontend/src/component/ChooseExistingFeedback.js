@@ -1,11 +1,74 @@
 import React from "react";
-import { Form, Button, Input,Card, Col, Row,notification, Spin, Typography, Modal  } from "antd";
+import { Form, Button, Input,Card, Col, Row,notification, Spin, Typography, Modal, Tooltip  } from "antd";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import '../css/Layout.css';
 import { LoadingOutlined } from '@ant-design/icons';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const {Text} = Typography;
+function formatNumber(value) {
+  value += '';
+  const list = value.split('.');
+  const prefix = list[0].charAt(0) === '-' ? '-' : '';
+  let num = prefix ? list[0].slice(1) : list[0];
+  let result = '';
+  while (num.length > 3) {
+    result = `,${num.slice(-3)}${result}`;
+    num = num.slice(0, num.length - 3);
+  }
+  if (num) {
+    result = num + result;
+  }
+  return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
+}
+
+class NumericInput extends React.Component {
+  onChange = e => {
+    const { value } = e.target;
+    const reg = /^-?[0-9]*(\.[0-9]*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+      this.props.onChange(value);
+    }
+  };
+
+  // '.' at the end or only '-' in the input box.
+  onBlur = () => {
+    const { value, onBlur, onChange } = this.props;
+    let valueTemp = value;
+    if (value.charAt(value.length - 1) === '.' || value === '-') {
+      valueTemp = value.slice(0, -1);
+    }
+    onChange(valueTemp.replace(/0*(\d+)/, '$1'));
+    if (onBlur) {
+      onBlur();
+    }
+  };
+
+  render() {
+    const { value } = this.props;
+    const title = value ? (
+      <span className="numeric-input-title">{value !== '-' ? formatNumber(value) : '-'}</span>
+    ) : (
+      'Input a number'
+    );
+    return (
+      <Tooltip
+        trigger={['focus']}
+        title={title}
+        placement="topLeft"
+        overlayClassName="numeric-input"
+      >
+        <Input
+          {...this.props}
+          onChange={this.onChange}
+          onBlur={this.onBlur}
+          placeholder="Input a number"
+          maxLength={25}
+        />
+      </Tooltip>
+    );
+  }
+}
 class ChooseExistingFeedback extends React.Component{
     constructor(props){
         super(props)
@@ -17,8 +80,12 @@ class ChooseExistingFeedback extends React.Component{
             feedbackAmount: 0,
             feedbackAmountState: false,
             collectionFeedback: true,
+            value: ''
         }
     }
+    onChange = value => {
+      this.setState({ value });
+    };
     componentDidMount(){
         // const testName = this.props.match.params.testid
         // const testGrade = this.props.match.params.testgrade
@@ -73,7 +140,7 @@ class ChooseExistingFeedback extends React.Component{
         this.setState({
           collectionFeedback: true,
         })
-        const total = e.target.elements.amount.value;
+        const total = this.state.value;
         let random_data = [];
         let temp_feedback = [];
         console.log(total);
@@ -197,11 +264,12 @@ class ChooseExistingFeedback extends React.Component{
                 </Row>
                  : 
                  <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect)}>
-                    <Form.Item label="How many feedbacks would you like to see? (maximum 5)">
-                        <Input type="number" name="amount" pattern="[0-5]*" onKey Press={this.onKeyPress.bind(this)} />
+                    <Form.Item style={{textAlign: 'center'}} label="How many feedbacks would you like to see? (maximum 5)">
+                        <Input size="small" type="number" name="amount" pattern="[0-5]*" onKey Press={this.onKeyPress.bind(this)} />
+                        <NumericInput name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
                     </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">Generate</Button>
+                    <Form.Item style={{textAlign: 'center'}} >
+                        <Button type="primary" htmlType="submit">Generate Feedback</Button>
                     </Form.Item>
                  </Form>
             

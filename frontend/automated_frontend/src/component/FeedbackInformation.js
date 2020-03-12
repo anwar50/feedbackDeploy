@@ -115,6 +115,7 @@ class FeedbackInformation extends React.Component {
         let test_id = 0
         let test_grade = 0
         let test_mark = 0
+        let effect = ""
         let min = 1
         let correct = 0
         let incorrect = 0
@@ -136,6 +137,7 @@ class FeedbackInformation extends React.Component {
             {
                 test_grade = item.grade
                 test_mark = item.grade_mark
+                effect = item.effectiveness
             }
         })
         this.state.answers.map(function(item, i){
@@ -271,7 +273,7 @@ class FeedbackInformation extends React.Component {
                     </Button> <br /><br/>
                     {/* <Link to={`/generatefeedback/` + this.props.match.params.id + `/` + this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
                      */}
-                     <Link to={`/reviewFeedback/` + this.props.match.params.id + `/` + test_mark +`/` + test_grade + `/` + correct +`/`+ incorrect +`/` +this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
+                     <Link to={`/reviewFeedback/` + this.props.match.params.id + `/` + test_mark +`/` + test_grade + `/` + correct +`/`+ incorrect +`/` + effect + `/` +this.props.match.params.userid}><Button>Happy to go and generate a feedback?</Button></Link>
                   </div>
                 </Row>
               </div>

@@ -194,7 +194,7 @@ class NLTKProcess(View):
     final_feedback_score = 0
     final_sentiment_score = 0
     final_feedback_category = ""
-    def get(self, request, test, grade, mark, correct, incorrect):
+    def get(self, request, test, grade, mark, correct, incorrect, effectiveness):
         #total marks for the test
         totalMarks = int(incorrect) + int(correct)
             #PROCESSING TRAINGING MODEL

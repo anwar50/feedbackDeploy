@@ -91,6 +91,7 @@ class SavedTests extends React.Component {
       let effectiveness = "";
       const total = e.target.elements.total_mark.value;
       const total_sub = e.target.elements.total_sub.value;
+      const weakest = e.target.elements.weakest.value;
       const final_mark = parseInt((total_sub/total)*100)
       if(final_mark >= 70 && final_mark <= 100)
       {
@@ -152,7 +153,8 @@ class SavedTests extends React.Component {
                   axios.post('http://127.0.0.1:8000/api/create/answer/', {
                     test: TESTID,
                     total_mark_for_question: total,
-                    total_sub_marks: total_sub
+                    total_sub_marks: total_sub,
+                    weakest_topic: weakest
                   })
                     .then(res => {
                       console.log(res)
@@ -220,7 +222,7 @@ class SavedTests extends React.Component {
               </Form.Item>
               <Form.Item label="Type of question">
                   <Select ref={ref => {
-                    this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
+                    this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 190}} onChange={this.handleChange}>
                       <Option value="MCQ">Multiple choice questions</Option>
                       <Option value="Definition">Short definitions</Option>
                       <Option value="Skeleton Program">Skeleton program questions</Option>
@@ -292,8 +294,11 @@ class SavedTests extends React.Component {
               <Form.Item label="Total mark given to students for sub questions">
                   <Input type="number" name="total_sub" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
               </Form.Item>
+              <Form.Item label="What was the students weakest topic?">
+                  <Input name="weakest" placeholder="" />
+              </Form.Item>
               <Form.Item>
-              <Button type="primary" htmlType="submit">Update Grade</Button>
+                <Button type="primary" htmlType="submit">Update Grade</Button>
             </Form.Item>
           </Form>
           </div>  

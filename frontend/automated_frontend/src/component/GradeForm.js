@@ -37,6 +37,7 @@ class GradeForm extends React.Component {
       let effectiveness = "";
       const total = e.target.elements.total_mark.value;
       const total_sub = e.target.elements.total_sub.value;
+      const weakest = e.target.elements.weakest.value;
       const final_mark = parseInt((total_sub/total)*100)
       if(final_mark >= 70 && final_mark <= 100)
       {
@@ -77,7 +78,8 @@ class GradeForm extends React.Component {
             axios.post('http://127.0.0.1:8000/api/create/answer/', {
               test: testID.id,
               total_mark_for_question: total,
-              total_sub_marks: total_sub
+              total_sub_marks: total_sub,
+              weakest_topic: weakest,
             })
             .then(res => {
               console.log(res)
@@ -122,6 +124,12 @@ class GradeForm extends React.Component {
             <Form.Item label="Total mark given to students for sub questions">
                 <Input type="number" name="total_sub" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
             </Form.Item>
+            <Form.Item label="What was the students weakest topic?">
+                <Input name="weakest" placeholder="" />
+            </Form.Item>
+            <Form.Item label="Description">
+                <Input name="description" placeholder={this.state.module.description} />
+              </Form.Item>
             {/* <Form.Item label="Grade Number">
                   <Input type="number" name="num" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
               </Form.Item> */}

@@ -90,6 +90,7 @@ class AnswersBank(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     total_mark_for_question = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     total_sub_marks = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    weakest_topic = models.CharField(max_length=100000, default="None")
     def __str__(self):
         return str(self.total_mark_for_question)
 
