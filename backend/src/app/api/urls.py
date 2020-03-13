@@ -105,4 +105,5 @@ urlpatterns = [
     path('processnltk/<test>/<grade>/<mark>/<correct>/<incorrect>/<effectiveness>', NLTKProcess.as_view()),
         ##generated Feedback category
     path('generatedFeedback', FeedbackListView.as_view()),
+    
 ]

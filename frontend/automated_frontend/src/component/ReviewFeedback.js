@@ -59,6 +59,10 @@ class ReviewFeedback extends React.Component{
             console.log(res.data)
             temp_feedback = res.data[0]
             improvement_feedback = res.data[1]
+            var q1 = (0.25*improvement_feedback.length+1)
+            var q2 = (0.5*improvement_feedback.length+1)
+            var q3 = (0.75*improvement_feedback.length+1)
+            
             var random_feedback = temp_feedback[Math.floor(Math.random()*temp_feedback.length)];
             var improvement = improvement_feedback[Math.floor(Math.random()*improvement_feedback.length)]
             console.log(random_feedback)
@@ -105,21 +109,7 @@ class ReviewFeedback extends React.Component{
             giveImprovement: true,
         })
         
-        // axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}/${incorrect}/${effect}`)
-        //   .then(res => {
-        //       console.log(res.data)
-        //       var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
-        //       if(random_feedback.category == "negative")
-        //       {
-        //         this.setState({
-        //           improvement: true,
-        //         })
-        //       }
-        //       this.setState({
-        //           data: random_feedback,
-        //           showFeedback: true
-        //       })
-        //   })
+        
     }
     render()
     {
@@ -149,6 +139,7 @@ class ReviewFeedback extends React.Component{
                     <Card  bordered style={{color: 'blue', marginLeft: 150}} title="Positive feedback information" bordered={false}>
                       <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <p>Needs improvement!</p> : <p>Is doing very well!</p>}</p> : null} </Text>
                     </Card>
                   </Col>
@@ -165,7 +156,7 @@ class ReviewFeedback extends React.Component{
                   <Col span={10}>
                     <Card bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
                       {this.state.giveImprovement ? <Text strong>{this.state.AreasOfImprovement}</Text> : <Text strong>A list of topics that the student struggled with will show very soon.</Text>} <br/>
-                      <Text strong>Percentage:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{score_two}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Percentage:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.quartile}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                       
                     </Card>    

@@ -197,6 +197,12 @@ class NLTKProcess(View):
     def get(self, request, test, grade, mark, correct, incorrect, effectiveness):
         #total marks for the test
         totalMarks = int(incorrect) + int(correct)
+        #75% of total
+        upper_marks = int(0.75*totalMarks)
+        #25% of total
+        lower_marks = int(0.25*totalMarks)
+        #half of total
+        middle_mark = int(totalMarks/2)
             #PROCESSING TRAINGING MODEL
         file = glob.glob('C:\\Users\\anwardont delete my\\Documents\\Datasets\\Review.json')
             #process the data from the json file and store in array for the model
@@ -205,6 +211,7 @@ class NLTKProcess(View):
         top_80 = []
         top_70 = []
         top_60 = []
+        Alltop_90 = []
             #top improvment feedbacks
         top_90_improv = []
         top_80_improv = []
@@ -220,7 +227,7 @@ class NLTKProcess(View):
         reviewFrame = []
         # for review in Reviews[:50]:
             #use the first 5000 reviews in the reviews dataset.
-        for review in Reviews[:50]:
+        for review in Reviews[:5000]:
             try:
                 jsondata = json.loads(review)
                 reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
@@ -255,111 +262,194 @@ class NLTKProcess(View):
                 return 'negative'
 
         #taking the first 100,000 reviews
-        Training_Data = new_dataset.head(10000)
 
+        Training_Data = new_dataset.head(10000)
         #calculate the sentiment score and store new column called
         Training_Data['Sentiment_Score'] = Training_Data['Review_Text'].apply(lambda x: Sentimental(x))
         Training_Data['Sentiment_Category'] = Training_Data['Review_Text'].apply(lambda x: SentimentalScore(x))
-
+            #sort in ascending order
+        Training_Data = Training_Data.sort_values('Sentiment_Score', ascending=True)
         #score = Training_Data.loc[Training_Data['Sentiment_Score']]
         neutral = Training_Data.loc[Training_Data['Sentiment_Category'] == 'neutral']
         positive = Training_Data.loc[Training_Data['Sentiment_Category'] == 'positive']
         negative = Training_Data.loc[Training_Data['Sentiment_Category'] == 'negative']
-
+        #calculate the upper quartile
+        #q3 = round(0.75*(len(Training_Data)+1))
+        #print(Training_Data.iloc[[q3]])
         print(positive)
         print(negative)
         ratings = Training_Data['Rating']
         reviews = Training_Data['Review_Text']
+        Votes = Training_Data['Total_Votes']
+        
         sentiment_cat = Training_Data['Sentiment_Category']
         sentiment_score = Training_Data['Sentiment_Score']
         name = Training_Data['Reviewer_Name']
         train = Training_Data
-        for review, score, cat in zip( reviews, sentiment_score, sentiment_cat):
-            if grade == "A" and cat == "positive":
-                    #students with 90% and higher
-                if int(mark) >= 90 and score >= 0.9:
-                    print(int(totalMarks/2))
+        for review, score, cat in zip(reviews, sentiment_score, sentiment_cat):
+            if grade == "A":
+                if int(mark) >= 90 and score >= 0.9 and cat == "positive":
                     new_obj = {'score': score,
                                 'review': review,
-                                'category': cat
+                                'category': cat,
+                                'effectiveness': effectiveness
                                 }
-                    top_90.append(new_obj)
-                    context = top_90
+                    Alltop_90.append(new_obj)
+                    context = Alltop_90
+                    #negative feedback for improvment
+                if int(incorrect) < lower_marks and cat == "negative":
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat,
+                                'effectiveness': effectiveness,
+                                'quartile': 'low'
+                                }
+                    top_90_improv.append(new_obj)
+                    improvmentFeedback = top_90_improv
+                    print(new_obj)
+                    print("this person should be given a low imrpovement from a negative batch")
+                elif int(incorrect) > upper_marks and cat == "negative":
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat,
+                                'effectiveness': effectiveness,
+                                'quartile': 'high'
+                                }
+                    top_90_improv.append(new_obj)
+                    improvmentFeedback = top_90_improv
+                    print("this person should be given a high improvement from a negative batch")
+                elif int(incorrect) > lower_marks and int(incorrect) < middle_mark and cat == "negative":
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat,
+                                'effectiveness': effectiveness,
+                                'quartile': 'neutral'
+                                }
+                    top_90_improv.append(new_obj)
+                    improvmentFeedback = top_90_improv
+                    print("this person should be given a neutral feedback")
+                    
+                if int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9 and cat == "positive":
+                    new_obj = {'score': score,
+                                'review': review,
+                                 'category': cat,
+                                'effectiveness': effectiveness
+                                }
+                    Alltop_80.append(new_obj)
+                    context = Alltop_80
+                if int(mark) >= 70 and int(mark) < 80 and score >= 0.7 and score < 0.8 and cat == "positive":
+                    new_obj = {'score': score,
+                                'review': review,
+                                'category': cat,
+                                'effectiveness': effectiveness
+                                }
+                    Alltop_70.append(new_obj)
+                    context = Alltop_70
+        print(improvmentFeedback)
+                
+                
+                   
+        # for review, score, cat in zip( reviews, sentiment_score, sentiment_cat):
+        #     if grade == "A" and cat == "positive":
+        #             #students with 90% and higher
+        #         if int(mark) >= 90 and score >= 0.9:
+        #             ##SPLIT INTO 4 QUARTILES 
+        #             new_obj = {'score': score,
+        #                         'review': review,
+        #                         'category': cat,
+        #                         'effectiveness': effectiveness
+        #                         }
+        #             top_90.append(new_obj)
+        #             context = top_90
+        # q3 = round(0.75*(len(context)+1))
+        # q1 = round(0.25*(len(context)+1))
+        # q2 = round(len(context)/2)
+        # print(context[q3])
             #quartals 25, 75, 50...
+                    
                         #check if the incorrect answers is above the half point, give an improvement feedback
-                    if int(incorrect) >= (int(totalMarks/2)) and score >= 0.95:
-                        print("entered ")
-                        new_obj = {'score': score,
-                                    'review': review,
-                                    'category': cat
-                                    }
-                        top_90_improv.append(new_obj)
-                        improvmentFeedback = top_90_improv
-                    elif int(incorrect) < (int(totalMarks/2)) and score < 0.95 and score > 0.9:
-                        new_obj = {'score': score,
-                                    'review': review,
-                                    'category': cat
-                                    }
-                        top_90_improv.append(new_obj)
-                        improvmentFeedback = top_90_improv
-                    #students with 80% and higher
-                elif int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9:
-                    new_obj = {'score': score,
-                                'review': review,
-                                'category': cat
-                                }
-                    top_90.append(new_obj)
-                    context = top_90
-                    #students with 70% and higher
-                elif int(mark) >= 70 and int(mark)  < 80 and score >= 0.7 and score < 0.8:
-                    new_obj = {'score': score,
-                                'review': review,
-                                'category': cat
-                                }
-                    top_90.append(new_obj)
-                    context = top_90
-            if grade == "B" and cat == "positive":
-                #students with 60% and higher
-                if int(mark) >= 60 and int(mark)  < 70 and score >= 0.6 and score < 0.7:
-                    new_obj = {'score': score,
-                                'review': review,
-                                'category': cat
-                                }
-                    top_90.append(new_obj)
-                    context = top_90
-            if grade == "C" and cat == "negative":
-                #students with 50% and higher
-                if int(mark) >= 50 and int(mark) < 60 and score >= -0.5 and score < -0.7:
-                    new_obj = {'score': score,
-                                'review': review,
-                                'category': cat
-                                }
-                    top_80.append(new_obj)
-                    context = top_80
-            if grade == "D" and cat == "negative":
-                #students with 50% and higher
-                if int(mark) >= 40 and int(mark) < 50 and score >= -0.7 and score < -0.8:
-                    new_obj = {'score': score,
-                                'review': review,
-                                'category': cat
-                                }
-                    top_80.append(new_obj)
-                    context = top_80
-            if grade == "Fail" and cat == "negative":
-                #students with Fail
-                if int(mark) >= 0 and int(mark) < 40 and score >= -0.8 and score <= -0.9:
-                    new_obj = {'score': score,
-                                'review': review,
-                                'category': cat
-                                }
-                    top_80.append(new_obj)
-                    context = top_80
+            #         if int(incorrect) >= upper_marks and score >= 0.95:
+            #             print("entered ")
+            #             new_obj = {'score': score,
+            #                         'review': review,
+            #                         'category': cat,
+            #                         'effectiveness': effectiveness
+            #                         }
+            #             top_90_improv.append(new_obj)
+            #             improvmentFeedback = top_90_improv
+            #         elif int(incorrect) < (int(totalMarks/2)) and score < 0.95 and score > 0.9:
+            #             new_obj = {'score': score,
+            #                         'review': review,
+            #                         'category': cat,
+            #                         'effectiveness': effectiveness
+            #                         }
+            #             top_90_improv.append(new_obj)
+            #             improvmentFeedback = top_90_improv
+            #         #students with 80% and higher
+            #     elif int(mark) >= 80 and int(mark) < 90 and score >= 0.8 and score < 0.9:
+            #         new_obj = {'score': score,
+            #                     'review': review,
+            #                     'category': cat,
+            #                     'effectiveness': effectiveness
+            #                     }
+            #         top_90.append(new_obj)
+            #         context = top_90
+            #         #students with 70% and higher
+            #     elif int(mark) >= 70 and int(mark)  < 80 and score >= 0.7 and score < 0.8:
+            #         new_obj = {'score': score,
+            #                     'review': review,
+            #                     'category': cat,
+            #                     'effectiveness': effectiveness
+            #                     }
+            #         top_90.append(new_obj)
+            #         context = top_90
+            # if grade == "B" and cat == "positive":
+            #     #students with 60% and higher
+            #     if int(mark) >= 60 and int(mark)  < 70 and score >= 0.6 and score < 0.7:
+            #         new_obj = {'score': score,
+            #                     'review': review,
+            #                     'category': cat,
+            #                     'effectiveness': effectiveness
+            #                     }
+            #         top_90.append(new_obj)
+            #         context = top_90
+            # if grade == "C" and cat == "negative":
+            #     #students with 50% and higher
+            #     if int(mark) >= 50 and int(mark) < 60 and score >= -0.5 and score < -0.7:
+            #         new_obj = {'score': score,
+            #                     'review': review,
+            #                     'category': cat,
+            #                     'effectiveness': effectiveness
+            #                     }
+            #         top_80.append(new_obj)
+            #         context = top_80
+            # if grade == "D" and cat == "negative":
+            #     #students with 50% and higher
+            #     if int(mark) >= 40 and int(mark) < 50 and score >= -0.7 and score < -0.8:
+            #         new_obj = {'score': score,
+            #                     'review': review,
+            #                     'category': cat,
+            #                     'effectiveness': effectiveness
+            #                     }
+            #         top_80.append(new_obj)
+            #         context = top_80
+            # if grade == "Fail" and cat == "negative":
+            #     #students with Fail
+            #     if int(mark) >= 0 and int(mark) < 40 and score >= -0.8 and score <= -0.9:
+            #         new_obj = {'score': score,
+            #                     'review': review,
+            #                     'category': cat,
+            #                     'effectiveness': effectiveness
+            #                     }
+            #         top_80.append(new_obj)
+            #         context = top_80
             
         print(test + " " + mark + " " + correct)
         print("fg")
         #context = [self.final_feedback_given, self.final_feedback_score, self.final_feedback_category]
         final_context = [context, improvmentFeedback]
         return JsonResponse(final_context, safe = False)
+
 
 
 
