@@ -86,6 +86,7 @@ class ReviewFeedback extends React.Component{
         
         this.setState({
             showFeedback: false,
+            giveImprovement: false
         })
         axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}/${incorrect}/${effect}`)
         .then(res => {
@@ -132,7 +133,7 @@ class ReviewFeedback extends React.Component{
                 <Row>
                   <Col span={8}>
                     <Card headStyle={{backgroundColor: 'green'}} bordered style={{color: 'blue'}} title="Positive Feedback for the overall test" bordered={false}>
-                      <Text strong>{this.state.showFeedback ? this.state.feedbackData.review : <Spin indicator={antIcon} />}</Text>
+                      <Text strong>Feedback: {this.state.showFeedback ? this.state.feedbackData.review : <Spin indicator={antIcon} />}</Text>
                     </Card>
                   </Col>
                   <Col span={10}>
