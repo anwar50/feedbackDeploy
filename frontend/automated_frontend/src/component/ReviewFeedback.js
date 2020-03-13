@@ -142,7 +142,7 @@ class ReviewFeedback extends React.Component{
                       <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <p>Needs improvement!</p> : <p>Is doing very well!</p>}</p> : null} </Text>
-                    </Card>
+                    </Card>jygj
                   </Col>
                 </Row>
                 <Row>
