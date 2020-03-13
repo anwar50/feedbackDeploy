@@ -155,8 +155,8 @@ class ReviewFeedback extends React.Component{
                   </Col>
                   <Col span={10}>
                     <Card bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
-                      {this.state.giveImprovement ? <Text strong>{this.state.AreasOfImprovement}</Text> : <Text strong>A list of topics that the student struggled with will show very soon.</Text>} <br/>
-                      <Text strong>Percentage:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.quartile}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.quartile}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                       
                     </Card>    
