@@ -233,7 +233,7 @@ class NLTKProcess(View):
         reviewFrame = []
         # for review in Reviews[:50]:
             #use the first 5000 reviews in the reviews dataset.
-        for review in Reviews[:5000]:
+        for review in Reviews[:1000]:
             try:
                 jsondata = json.loads(review)
                 reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
@@ -248,7 +248,15 @@ class NLTKProcess(View):
             blob = TextBlob(line, analyzer=NaiveBayesAnalyzer())
             sentiment_score = blob.sentiment.classification
             return sentiment_score
-
+        def Sentimental_NaiveScore(line):
+            blob = TextBlob(line, analyzer=NaiveBayesAnalyzer())
+            sentiment_score = blob.sentiment.classification
+            if sentiment_score >= 0.5:
+                return 'positive'
+            elif (sentiment_score > -0.5) and (sentiment_score < 0.5):
+                return 'neutral'
+            elif sentiment_score <= -0.5:
+                return 'negative'
         #creating a compound score for each review
         def Sentimental(line):
             analyzer = SentimentIntensityAnalyzer()
@@ -292,7 +300,9 @@ class NLTKProcess(View):
         sentiment_score = Training_Data['Sentiment_Score']
         name = Training_Data['Reviewer_Name']
         train = Training_Data
-        for review, score, cat in zip(reviews, sentiment_score, sentiment_cat):
+            ########RATING OF THE FEEDBACK IS ALSO COMPARED WITH THE INCORRECT!!
+            ########OF RATING IS 4 THEN LOW FEEDBACK OTHERWISE IF ITS 5 THEN HIGH FEEDBACK
+        for review, score, cat, rating in zip(reviews, sentiment_score, sentiment_cat, ratings):
             if grade == "A":
                 if int(mark) >= 90 and score >= 0.9 and cat == "positive":
                     new_obj = {'score': score,
@@ -308,7 +318,8 @@ class NLTKProcess(View):
                                 'review': review,
                                 'category': cat,
                                 'effectiveness': effectiveness,
-                                'quartile': 'low'
+                                'quartile': 'low',
+                                'rating':rating
                                 }
                     top_improv.append(new_obj)
                     improvmentFeedback = top_improv
@@ -319,7 +330,8 @@ class NLTKProcess(View):
                                 'review': review,
                                 'category': cat,
                                 'effectiveness': effectiveness,
-                                'quartile': 'high'
+                                'quartile': 'high',
+                                'rating':rating
                                 }
                     top_improv.append(new_obj)
                     improvmentFeedback = top_improv
@@ -329,7 +341,8 @@ class NLTKProcess(View):
                                 'review': review,
                                 'category': cat,
                                 'effectiveness': effectiveness,
-                                'quartile': 'neutral'
+                                'quartile': 'neutral',
+                                'rating':rating
                                 }
                     top_improv.append(new_obj)
                     improvmentFeedback = top_improv

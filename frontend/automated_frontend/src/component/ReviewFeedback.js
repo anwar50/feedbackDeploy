@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Input,Card, Col, Row,notification, Spin, Typography  } from "antd";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import '../css/Layout.css';
+import '../css/reviewFeedback.css';
 import { LoadingOutlined } from '@ant-design/icons';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const {Text} = Typography;
@@ -121,33 +121,37 @@ class ReviewFeedback extends React.Component{
                 
                 <Row gutter={10} justify="space-around" type="flex">
                   <Col span={5}>
-                    <Card bordered style={{color: 'blue'}} title="Test Information" bordered={false}>
+                    <Card className="popupreview" bordered style={{color: 'blue'}} title="Test Information" bordered={false}>
                       <Text strong>Test Name:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testid}</Text> <br/>
                       <Text strong>Test Grade:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testgrade}</Text> <br />
                       <Text strong>Test Mark:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testmark} %</Text> <br/>
                       <Text strong>Correct Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.correct}</Text> <br/>
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/>
+                      <Link to={``}><Button>See further breakdown of test</Button></Link>
                     </Card>
+                    
                   </Col>
                 </Row>
+                <br/>
                 <Row>
                   <Col span={8}>
-                    <Card headStyle={{backgroundColor: 'green'}} bordered style={{color: 'blue'}} title="Positive Feedback for the overall test" bordered={false}>
+                    <Card className="popupreview" headStyle={{backgroundColor: 'green'}} bordered style={{color: 'blue'}} title="Positive Feedback for the overall test" bordered={false}>
                       <Text strong>Feedback: {this.state.showFeedback ? this.state.feedbackData.review : <Spin indicator={antIcon} />}</Text>
                     </Card>
                   </Col>
                   <Col span={10}>
-                    <Card  bordered style={{color: 'blue', marginLeft: 150}} title="Positive feedback information" bordered={false}>
+                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Positive feedback information" bordered={false}>
                       <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <p>Needs improvement!</p> : <p>Is doing very well!</p>}</p> : null} </Text>
-                    </Card>jygjgvb
+                    </Card>
                   </Col>
                 </Row>
+                <br/>
                 <Row>
                   <Col span={8}>
-                    <Card headStyle={{backgroundColor: 'red'}} bordered style={{color: 'blue'}} title="Improvement Feedback" bordered={false}>
+                    <Card className="popupreview" headStyle={{backgroundColor: 'red'}} bordered style={{color: 'blue'}} title="Improvement Feedback" bordered={false}>
                         
                         <Text strong>Feedback: {this.state.giveImprovement ?  this.state.improvementFeedbackData.review : null}</Text>
                         <Text strong>{this.state.showFeedback ? <Button onClick={(e) => this.generateImprovementfeedback(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect, this.props.match.params.effect)}>Find out feedback for areas of improvement</Button> : <Spin indicator={antIcon} />}</Text>
@@ -155,7 +159,7 @@ class ReviewFeedback extends React.Component{
                     </Card>
                   </Col>
                   <Col span={10}>
-                    <Card bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
+                    <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
                       <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.quartile}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
@@ -164,6 +168,7 @@ class ReviewFeedback extends React.Component{
                   </Col>      
                 </Row>
                 <div className="btnFeedback" style={{textAlign: 'center',  marginLeft: "30%",marginRight: '50%', margin: '23px'}}>
+                    
                     <Button style={{ margin: '5px'}} type="primary" onClick={(e) => this.generateFeedback(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect, this.props.match.params.effect)}>Generate another feedback?</Button>
                     <Link to={`/chooseExistingFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.state.feedbackData.score + `/` + this.props.match.params.effect + `/` + this.props.match.params.userid}><Button style={{marginLeft: '70%', margin: '5px'}} type="primary">Choose from a batch of feedbacks?</Button></Link>
                     <Link to={`/generatefeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.state.feedbackData.score + `/` + this.state.feedbackData.review + `/` + this.props.match.params.userid}><Button style={{marginLeft: '70%', margin: '5px'}} type="primary">Happy to see the full result?</Button></Link>
