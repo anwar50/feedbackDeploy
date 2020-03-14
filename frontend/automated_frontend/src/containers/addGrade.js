@@ -14,5 +14,5 @@ class AddGrade extends React.Component{
             </div>
         )
     }
-}
+} 
 export default AddGrade

@@ -127,9 +127,7 @@ class GradeForm extends React.Component {
             <Form.Item label="What was the students weakest topic?">
                 <Input name="weakest" placeholder="" />
             </Form.Item>
-            <Form.Item label="Description">
-                <Input name="description" placeholder={this.state.module.description} />
-              </Form.Item>
+            
             {/* <Form.Item label="Grade Number">
                   <Input type="number" name="num" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
               </Form.Item> */}

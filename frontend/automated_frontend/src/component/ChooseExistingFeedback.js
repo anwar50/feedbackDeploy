@@ -160,7 +160,7 @@ class ChooseExistingFeedback extends React.Component{
                     this.state.collectionFeedback ?
                    <div>Please wait while {this.state.feedbackAmount} feedbacks are being generated!<Spin indicator={antIcon} /></div>
                     :
-                    <div style={{type: 'flex', justifyContent: 'center'}}>
+                    <div style={{textAlign: 'center'}}>
                       {this.state.data.map(function(item, i){
                         let title = "Feedback " + (i+1)
                         let review = item.review
@@ -172,7 +172,7 @@ class ChooseExistingFeedback extends React.Component{
                             let secondsToGo = 20;
                                 const modal = Modal.success({
                                   title: 'Thank you for choosing a feedback! You can now choose to save or export!',
-                                  content: <Button onClick={(e) => this.SendFeedback("dfgh")}>See full result</Button>,
+                                  content: '',
                                 });
                                 const timer = setInterval(() => {
                                   secondsToGo -= 1;
@@ -189,11 +189,11 @@ class ChooseExistingFeedback extends React.Component{
                         let score = Math.round(item.score * 100)
                         
                         return(
-                          <Col span={5}>
+                          <Col span={5} style={{textAlign: 'center'}}>
                             <Card bordered style={{ color: 'blue'}} title={title} bordered={false}>
-                                <Text type="warning" strong>Review: </Text><Text strong>{item.review}</Text><br />
-                                <Text type="warning" strong>Score: </Text><Text strong>{score}</Text><br />
-                                <Text type="warning" strong>Outcome of test: </Text><Text strong>{item.effectiveness}</Text>
+                                <Text strong style={{color: '#096dd9'}}>Review: </Text><Text strong>{item.review}</Text><br />
+                                <Text strong style={{color: '#096dd9'}}>Score: </Text><Text strong>{score}</Text><br />
+                                <Text strong style={{color: '#096dd9'}}>Outcome of test: </Text><Text strong>{item.effectiveness}</Text>
                             </Card>
                             
                             <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link>

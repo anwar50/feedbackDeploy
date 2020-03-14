@@ -195,7 +195,7 @@ class SavedTests extends React.Component {
       let secondsToGo = 600;
       
       const modal = Modal.success({
-        title: `This message will be destroyed after ${secondsToGo} seconds` ,
+        title: `This message will be destroyed after 10 minutes` ,
         content: '',
       });
       const timer = setInterval(() => {
@@ -274,7 +274,7 @@ class SavedTests extends React.Component {
       let secondsToGo = 600;
       
       const modal = Modal.success({
-        title: `This message will be destroyed after ${secondsToGo} seconds` ,
+        title: `This message will be destroyed after 10 minutes` ,
         content: '',
       });
       const timer = setInterval(() => {
@@ -355,7 +355,7 @@ class SavedTests extends React.Component {
           let secondsToGo = 10;
           const modal = Modal.success({
             title: 'Test for ' + e + ' has been deleted',
-            content: `...`,
+            content: ``,
           });
           const timer = setInterval(() => {
             secondsToGo -= 1;

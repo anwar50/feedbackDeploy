@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Input,Card, Col, Row,notification, Spin, Typography, Modal  } from "antd";
+import { Form, Button, Input,Card, Col, Row,notification, Spin, Typography, Modal, Tooltip  } from "antd";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import '../css/reviewFeedback.css';
@@ -19,7 +19,10 @@ class ReviewFeedback extends React.Component{
             AreasOfImprovement: "",
             personalImprovementGiven: false,
             personalImprovement: "",
+            editedFeedback: "",
+            editedFeedbackGiven: false
         }
+        this.onChangeFeedback = this.onChangeFeedback.bind(this)
     }
     componentDidMount(){
         const testName = this.props.match.params.testid
@@ -93,6 +96,16 @@ class ReviewFeedback extends React.Component{
         personalImprovement: title
       })
     }
+    handleEditedFeedbackSubmit(e, requestMethod, test)
+    {
+      e.preventDefault();
+      const feedback = e.target.elements.name.value;
+      console.log(feedback);
+      this.setState({
+        editedFeedbackGiven: true,
+        editedFeedback: feedback
+      })
+    }
     generateFeedback(testName, testGrade, testMark, correct, incorrect, effect){
         console.log("hi yes!!")
         
@@ -156,6 +169,50 @@ class ReviewFeedback extends React.Component{
         modal.destroy();
       }, secondsToGo * 1000);
     }
+    breakdownTest(testname, grade, mark, correct, incorrect)
+    {
+
+    }
+    onChangeFeedback(e){
+      const {name, value} = e.target;
+      this.setState({
+        editedFeedback: value
+      })
+    }
+    updateFeedback = (e) => {
+      this.setState({
+        editedFeedback: e
+      })
+      let secondsToGo = 600;
+      const modal = Modal.success({
+        title: `You have 10 minutes to edit this feedback otherwise this message will be destroyed` ,
+        content: '',
+      });
+      const timer = setInterval(() => {
+        secondsToGo -= 1;
+        modal.update({
+          content: 
+          <div>
+          <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
+                <strong>Your improvement feedback has been changed!</strong>
+          </div>
+          <h2 style={{display: 'flex', justifyContent: 'center'}} >Edit this feedback here!</h2>
+          <Form onSubmit={(event) => this.handleEditedFeedbackSubmit(event, e)}>
+              <Form.Item label="Feedback">
+                <Input name="name" value={this.state.editedFeedback} onChange={this.onChangeFeedback}  placeholder={e} />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Publish edited feedback</Button>
+              </Form.Item>
+          </Form>
+      </div> ,
+        });
+      }, 1000);
+      setTimeout(() => {
+        clearInterval(timer);
+        modal.destroy();
+      }, secondsToGo * 1000);
+    }
     render()
     {
       let score_one = Math.round(this.state.feedbackData.score * 100)
@@ -171,7 +228,7 @@ class ReviewFeedback extends React.Component{
                       <Text strong>Test Mark:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testmark} %</Text> <br/>
                       <Text strong>Correct Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.correct}</Text> <br/>
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/>
-                      <Link to={``}><Button>See further breakdown of test</Button></Link>
+                      <Button onClick={(e) => this.breakdownTest(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect)}>See further breakdown of test</Button>
                     </Card>
                     
                   </Col>
@@ -180,7 +237,7 @@ class ReviewFeedback extends React.Component{
                 <Row>
                   <Col span={8}>
                     <Card className="popupreview" headStyle={{backgroundColor: 'green'}} bordered style={{color: 'blue'}} title="Positive Feedback for the overall test" bordered={false}>
-                      <Text strong>Feedback: {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.review }</Text>: <Spin indicator={antIcon} />}</Text>
+                      <Tooltip title="Click to edit this feedback" onClick={(e) => this.updateFeedback(this.state.feedbackData.review)}>{this.state.editedFeedbackGiven ? <Text strong>Feedback: <Text strong style={{color: '#096dd9'}}>{this.state.editedFeedback}</Text> </Text>: <Text strong >Feedback: {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.review }</Text>: <Spin indicator={antIcon} />}</Text>}</Tooltip>
                     </Card>
                   </Col>
                   <Col span={10}>
@@ -215,7 +272,7 @@ class ReviewFeedback extends React.Component{
                     :
                     <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
                       <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
-                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.rating}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.quartile}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                     </Card> 
                     }
