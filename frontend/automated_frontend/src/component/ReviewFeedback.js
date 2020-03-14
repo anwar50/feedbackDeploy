@@ -20,7 +20,9 @@ class ReviewFeedback extends React.Component{
             personalImprovementGiven: false,
             personalImprovement: "",
             editedFeedback: "",
-            editedFeedbackGiven: false
+            editedFeedbackGiven: false,
+            typeOfFeedback: false,
+            feedbackColor: "",
         }
         this.onChangeFeedback = this.onChangeFeedback.bind(this)
     }
@@ -75,6 +77,25 @@ class ReviewFeedback extends React.Component{
             {
               this.setState({
                 improvement: true,
+              })
+            }
+            if(testGrade == "A" || testGrade == "B")
+            {
+              console.log("ff")
+              this.setState({
+                feedbackColor: 'green',
+              })
+            }
+            else if(testGrade == "C")
+            {
+              this.setState({
+                feedbackColor: '#FFBF00',
+              })
+            }
+            else
+            {
+              this.setState({
+                feedbackColor: 'red',
               })
             }
             this.setState({
@@ -234,14 +255,17 @@ class ReviewFeedback extends React.Component{
                   </Col>
                 </Row>
                 <br/>
-                <Row>
+                {this.state.feedbackColor == "green" 
+                
+                  ? 
+                  <Row>
                   <Col span={8}>
-                    <Card className="popupreview" headStyle={{backgroundColor: 'green'}} bordered style={{color: 'blue'}} title="Positive Feedback for the overall test" bordered={false}>
+                    <Card className="popupreview" headStyle={{backgroundColor: 'green'}} bordered style={{color: 'blue'}} title="Overall feedback" bordered={false}>
                       <Tooltip title="Click to edit this feedback" onClick={(e) => this.updateFeedback(this.state.feedbackData.review)}>{this.state.editedFeedbackGiven ? <Text strong>Feedback: <Text strong style={{color: '#096dd9'}}>{this.state.editedFeedback}</Text> </Text>: <Text strong >Feedback: {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.review }</Text>: <Spin indicator={antIcon} />}</Text>}</Tooltip>
                     </Card>
                   </Col>
                   <Col span={10}>
-                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Positive feedback information" bordered={false}>
+                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Overall feedback information" bordered={false}>
                       <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                       <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
@@ -249,6 +273,59 @@ class ReviewFeedback extends React.Component{
                     </Card>
                   </Col>
                 </Row>
+                :
+                this.state.feedbackColor == "red"
+                ?
+                <Row>
+                  <Col span={8}>
+                    <Card className="popupreview" headStyle={{backgroundColor: 'red'}} bordered style={{color: 'blue'}} title="Overall feedback" bordered={false}>
+                      <Tooltip title="Click to edit this feedback" onClick={(e) => this.updateFeedback(this.state.feedbackData.review)}>{this.state.editedFeedbackGiven ? <Text strong>Feedback: <Text strong style={{color: '#096dd9'}}>{this.state.editedFeedback}</Text> </Text>: <Text strong >Feedback: {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.review }</Text>: <Spin indicator={antIcon} />}</Text>}</Tooltip>
+                    </Card>
+                  </Col>
+                  <Col span={10}>
+                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Overall feedback information" bordered={false}>
+                      <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <Text strong style={{color: 'red'}}>Needs improvement!</Text> : <Text strong style={{color: 'green'}}>Is doing very well!</Text>}</p> : null} </Text>
+                    </Card>
+                  </Col>
+                </Row>
+                :
+                this.state.feedbackColor == "#FFBF00"
+                ?
+                <Row>
+                  <Col span={8}>
+                    <Card className="popupreview" headStyle={{backgroundColor: '#FFBF00'}} bordered style={{color: 'blue'}} title="Overall feedback" bordered={false}>
+                      <Tooltip title="Click to edit this feedback" onClick={(e) => this.updateFeedback(this.state.feedbackData.review)}>{this.state.editedFeedbackGiven ? <Text strong>Feedback: <Text strong style={{color: '#096dd9'}}>{this.state.editedFeedback}</Text> </Text>: <Text strong >Feedback: {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.review }</Text>: <Spin indicator={antIcon} />}</Text>}</Tooltip>
+                    </Card>
+                  </Col>
+                  <Col span={10}>
+                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Overall feedback information" bordered={false}>
+                      <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <Text strong style={{color: 'red'}}>Needs improvement!</Text> : <Text strong style={{color: 'green'}}>Is doing very well!</Text>}</p> : null} </Text>
+                    </Card>
+                  </Col>
+                </Row>
+                :
+                <Row>
+                  <Col span={8}>
+                    <Card className="popupreview" headStyle={{backgroundColor: 'grey'}} bordered style={{color: 'blue'}} title="Overall feedback" bordered={false}>
+                      <Tooltip title="Click to edit this feedback" onClick={(e) => this.updateFeedback(this.state.feedbackData.review)}>{this.state.editedFeedbackGiven ? <Text strong>Feedback: <Text strong style={{color: '#096dd9'}}>{this.state.editedFeedback}</Text> </Text>: <Text strong >Feedback: {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.review }</Text>: <Spin indicator={antIcon} />}</Text>}</Tooltip>
+                    </Card>
+                  </Col>
+                  <Col span={10}>
+                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Overall feedback information" bordered={false}>
+                      <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
+                      <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <Text strong style={{color: 'red'}}>Needs improvement!</Text> : <Text strong style={{color: 'green'}}>Is doing very well!</Text>}</p> : null} </Text>
+                    </Card>
+                  </Col>
+                </Row>
+                }
                 <br/>
                 <Row>
                   <Col span={8}>
