@@ -302,6 +302,7 @@ class NLTKProcess(View):
         train = Training_Data
             ########RATING OF THE FEEDBACK IS ALSO COMPARED WITH THE INCORRECT!!
             ########OF RATING IS 4 THEN LOW FEEDBACK OTHERWISE IF ITS 5 THEN HIGH FEEDBACK
+            ####### 1 - VERY LOWW RATING 2 - AVERAGE RATING 3 - OKAYY RATING 4 - GOOD RATING 5 - FANTASTIC RATING
         for review, score, cat, rating in zip(reviews, sentiment_score, sentiment_cat, ratings):
             if grade == "A":
                 if int(mark) >= 90 and score >= 0.9 and cat == "positive":
@@ -313,7 +314,7 @@ class NLTKProcess(View):
                     Alltop_90.append(new_obj)
                     context = Alltop_90
                     #negative feedback for improvment
-                if int(incorrect) < lower_marks and cat == "negative":
+                if int(incorrect) < lower_marks and cat == "negative" and rating == 1:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat,
@@ -325,7 +326,7 @@ class NLTKProcess(View):
                     improvmentFeedback = top_improv
                     print(new_obj)
                     print("this person should be given a low imrpovement from a negative batch")
-                elif int(incorrect) > upper_marks and cat == "negative":
+                elif int(incorrect) > upper_marks and cat == "negative" and rating == 4 or rating == 5:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat,
@@ -336,7 +337,7 @@ class NLTKProcess(View):
                     top_improv.append(new_obj)
                     improvmentFeedback = top_improv
                     print("this person should be given a high improvement from a negative batch")
-                elif int(incorrect) > lower_marks and int(incorrect) < middle_mark and cat == "negative":
+                elif int(incorrect) > lower_marks and int(incorrect) < middle_mark and cat == "negative" and rating == 3:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat,
