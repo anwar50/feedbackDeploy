@@ -2,7 +2,9 @@ import React from "react"
 import {Link} from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Table, Divider, RollbackOutlined, Modal } from "antd";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import {CSVLink, CSVDownload} from 'react-csv';
+import pdfmake from "pdfmake";
 import '../css/Layout.css';
 class GeneratedFeedback extends React.Component {
     constructor(props)
@@ -13,7 +15,8 @@ class GeneratedFeedback extends React.Component {
             grades: [],
             generatedFeedback: [],
             answers: [],
-            showingAlert: false
+            showingAlert: false,
+            docDefinition: {}
         }
     }
   
@@ -109,6 +112,19 @@ class GeneratedFeedback extends React.Component {
         }
         console.log(test + " " + grade + " " + feedback + " " + user + " " + percentage)
     }
+    // Export(test, grade, feedback, percentage)
+    // {
+    //   let new_obj = {
+    //     test: test,
+    //     grade: grade,
+    //     feedback: feedback,
+    //     percentage: percentage
+    //   }
+    //   this.setState({
+    //     docDefinition:  new_obj
+    //   })
+    //   pdfmake.createPdf(this.state.docDefinition).download('optionalName.pdf');;
+    // }
     render(){
         var divStyle = {
             height: "40vh", /* Magic here */
@@ -195,6 +211,7 @@ class GeneratedFeedback extends React.Component {
             ),
           }];
           //let score = Math.round(this.props.match.params.score * 100)
+
           const testInfo = [{
             key: '1',
             test: this.props.match.params.testid,
@@ -204,11 +221,17 @@ class GeneratedFeedback extends React.Component {
           }];
         return(
             <div>
-                <Link to={`/reviewFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` +this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
-                <Table columns={columns} dataSource={testInfo} />
+                <Link to={`/reviewFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.props.match.params.effect  + `/` +this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
+                <Table id="test" columns={columns} dataSource={testInfo} />
                 <div style={{marginLeft: '40%', marginRight: '50%'}} >
                   <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
+                </div><br/>
+                {/*   ############IMPROVEMENT TABLE############      */}
+                <Table id="test" columns={columns} dataSource={testInfo} />
+                <div style={{marginLeft: '40%', marginRight: '50%'}} >
+                  <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this improvement feedback</Button></Link>
                 </div>
+                
             </div>
         )
     }

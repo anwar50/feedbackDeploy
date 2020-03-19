@@ -89,6 +89,7 @@ class PreProcessedData(models.Model):
 class AnswersBank(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     total_mark_for_question = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    topics = models.CharField(max_length=100000, default="None")
     total_sub_marks = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     weakest_topic = models.CharField(max_length=100000, default="None")
     def __str__(self):

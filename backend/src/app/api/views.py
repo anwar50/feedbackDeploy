@@ -233,7 +233,7 @@ class NLTKProcess(View):
         reviewFrame = []
         # for review in Reviews[:50]:
             #use the first 5000 reviews in the reviews dataset.
-        for review in Reviews[:1000]:
+        for review in Reviews[:50]:
             try:
                 jsondata = json.loads(review)
                 reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
@@ -242,6 +242,8 @@ class NLTKProcess(View):
 
         #making a dataframe using the list of tuples created earlier
         new_dataset = pd.DataFrame(reviewFrame, columns=['Reviewer_ID','Asin','Reviewer_Name','helpful_UpVote','Total_Votes','Review_Text','Rating','Summary','Unix_Review_Time','Review_Time'])
+        #making a dataframe using the list of tuples created earlier
+        dataset_two = pd.DataFrame(reviewFrame, columns=['Reviewer_ID','Asin','Reviewer_Name','helpful_UpVote','Total_Votes','Review_Text','Rating','Summary','Unix_Review_Time','Review_Time'])
 
         #Calculation of sentiments for each review
         def Sentimental_Naive(line):
@@ -260,14 +262,16 @@ class NLTKProcess(View):
         #creating a compound score for each review
         def Sentimental(line):
             analyzer = SentimentIntensityAnalyzer()
-            vader_score = analyzer.polarity_scores(line)
-            sentiment_score = vader_score['compound']
+            pol_score = analyzer.polarity_scores(line)
+            sentiment_score = pol_score['compound']
             return sentiment_score
         #return the sentiment category based on the review analysis
         def SentimentalScore(line):
             analyzer = SentimentIntensityAnalyzer()
-            vader_score = analyzer.polarity_scores(line)
-            sentiment_score = vader_score['compound']
+            pol_score = analyzer.polarity_scores(line)
+                #shows the vader performance on a given feedback review.
+            print("{:-<40} {}".format(line, str(pol_score)))
+            sentiment_score = pol_score['compound']
             if sentiment_score >= 0.5:
                 return 'positive'
             elif (sentiment_score > -0.5) and (sentiment_score < 0.5):
@@ -276,7 +280,16 @@ class NLTKProcess(View):
                 return 'negative'
 
         #taking the first 100,000 reviews
-
+        # NaivTrainingData = dataset_two.head(10000)
+        # NaivTrainingData['Sentiment_Score'] = NaivTrainingData['Review_Text'].apply(lambda s: Sentimental_Naive(s))
+        # #NaivTrainingData['Sentiment_Category'] = NaivTrainingData['Review_Text'].apply(lambda s: Sentimental_NaiveScore(s))
+        # # NaivTrainingData = NaivTrainingData.sort_values('Sentiment_Score', ascending=True)
+        # #pos = NaivTrainingData.loc[NaivTrainingData['Sentiment_Category'] == 'positive']
+        # scores = NaivTrainingData['Sentiment_Score']
+        # for score in scores:
+        #     print(score)
+        #print(NaivTrainingData)
+        print("#################################################")
         Training_Data = new_dataset.head(10000)
         #calculate the sentiment score and store new column called
         Training_Data['Sentiment_Score'] = Training_Data['Review_Text'].apply(lambda x: Sentimental(x))
@@ -294,7 +307,7 @@ class NLTKProcess(View):
         print(negative)
         ratings = Training_Data['Rating']
         reviews = Training_Data['Review_Text']
-        Votes = Training_Data['Total_Votes']
+        #Votes = Training_Data['Total_Votes']
         
         sentiment_cat = Training_Data['Sentiment_Category']
         sentiment_score = Training_Data['Sentiment_Score']
@@ -314,7 +327,7 @@ class NLTKProcess(View):
                     Alltop_90.append(new_obj)
                     context = Alltop_90
                     #negative feedback for improvment
-                if int(incorrect) < lower_marks and cat == "negative" and rating == 5:
+                if int(incorrect) < lower_marks and cat == "negative" and rating == 5 or rating == 4:
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat,
