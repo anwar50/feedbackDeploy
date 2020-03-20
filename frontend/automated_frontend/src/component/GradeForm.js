@@ -1,26 +1,31 @@
-import { Form, Input, Button, Row, Col} from 'antd';
+import { Form, Input, Button, Row, Col, Select} from 'antd';
 import React from "react"
 import axios from "axios";
 import {Link} from "react-router-dom";
-// const {Option} = Select;
+const {Option} = Select;
 
 class GradeForm extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      type: "default",
       num: 0,
       module: [],
       showingAlert: false,
       test: [],
       num_subquestions: 0,
       topicsAsked: false,
+      topicSet:false,
       counter: 0,
       topics: []
     }
+    this.handleChange = this.handleChange.bind(this);
   }
   handleChange = (e) => {
+    const val = e.label
+    console.log(val)
     this.setState({
-      num: e,
+      type: e.label
     })
   }
   componentDidMount()
@@ -51,8 +56,9 @@ class GradeForm extends React.Component {
       let effectiveness = "";
       const total = e.target.elements.total_mark.value;
       const total_sub = e.target.elements.total_sub.value;
-      const weakest = e.target.elements.weakest.value;
+      //const weakest = e.target.elements.weakest.value;
       const final_mark = parseInt((total_sub/total)*100)
+      const weakest = this.state.type
       if(final_mark >= 70 && final_mark <= 100)
       {
         grade = "A";
@@ -144,7 +150,8 @@ class GradeForm extends React.Component {
     
     var join = this.state.topics.concat(topic);
     this.setState({
-      topics: join
+      topics: join,
+      topicSet: true
     })
     if(counter == this.state.num_subquestions)
     {
@@ -154,7 +161,10 @@ class GradeForm extends React.Component {
     }
   }
   render() {
-    
+    let list_topics = []
+    this.state.topics.map(function(item, i){
+      list_topics.push(item)
+    })
     return (
       <div>
         {this.state.topics}
@@ -176,19 +186,20 @@ class GradeForm extends React.Component {
                 <Form.Item label="Total mark given to students for sub questions">
                     <Input type="number" name="total_sub" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
                 </Form.Item>
-                <Form.Item label="What was the students weakest topic?">
-                    <Input name="weakest" placeholder="" />
-                </Form.Item>
+                
               </Col>
               
             </Row>
-      
-            {/* <Form.Item label="Grade Number">
-                  <Input type="number" name="num" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
-              </Form.Item> */}
-              {/* <Form.Item label="Effectiveness">
-                <Input name="effectiveness" placeholder="Outstanding, Good, Need Improvement, Poor or Fail.." />
-              </Form.Item> */}
+            <Form.Item label="Type of question">
+              
+            <Select ref={ref => {
+                        this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
+                  {list_topics.map(options =>(
+                      <Option value="topic"  value={options}>{options}</Option>
+                  ))}            
+            </Select>
+                  
+            </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">{this.props.btnText}</Button>
             </Form.Item>
