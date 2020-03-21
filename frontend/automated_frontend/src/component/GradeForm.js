@@ -1,6 +1,7 @@
-import { Form, Input, Button, Row, Col, Select} from 'antd';
+import { Form, Input, Button, Row, Col, Select, message, Card, Statistic} from 'antd';
 import React from "react"
 import axios from "axios";
+import NumericInput from "./NumericInput"
 import {Link} from "react-router-dom";
 const {Option} = Select;
 
@@ -17,10 +18,21 @@ class GradeForm extends React.Component {
       topicsAsked: false,
       topicSet:false,
       counter: 0,
-      topics: []
+      counterTwo: 0,
+      topics: [],
+      marksForTopicsAsked: false,
+      markSet: false,
+      marksForTopics: [],
+      value: '',
+      start: false,
+      totalMark: 0,
+      totalSub: 0
     }
     this.handleChange = this.handleChange.bind(this);
   }
+  onChange = value => {
+    this.setState({ value });
+  };
   handleChange = (e) => {
     const val = e.label
     console.log(val)
@@ -43,7 +55,8 @@ class GradeForm extends React.Component {
         .then(res => {
           this.setState({
             test: res.data,
-            num_subquestions: res.data.num_subquestions
+            num_subquestions: res.data.num_subquestions,
+            start: true
           })
         })
         
@@ -140,10 +153,12 @@ class GradeForm extends React.Component {
   }
   handleTopicSubmit(e, counter)
   {
+    
     counter = counter+1;
     console.log(counter)
     e.preventDefault();
     const topic = e.target.elements.topic.value;
+    message.success('We have successfully saved the topic: ' + topic);
     this.setState({
       counter: counter
     })
@@ -160,21 +175,176 @@ class GradeForm extends React.Component {
       })
     }
   }
+  handleMarkForTopicSubmit(e, counterTwo)
+  {
+    
+    counterTwo = counterTwo+1;
+    console.log(counterTwo)
+    e.preventDefault();
+    const mark = e.target.elements.amount.value;
+    message.success('We have successfully saved ' + mark + ' !.' );
+    this.setState({
+      counterTwo: counterTwo
+    })
+    
+    var join = this.state.marksForTopics.concat(mark);
+    this.setState({
+      marksForTopics: join,
+      markSet: true
+    })
+    console.log(this.state.num_subquestions)
+    if(counterTwo == this.state.num_subquestions)
+    {
+      console.log("nf")
+      this.setState({
+        marksForTopicsAsked: true,
+      })
+    }
+  }
+  handleTotalSubmit(e){
+    const total = e.target.elements.total_mark.value;
+    const total_sub = e.target.elements.total_sub.value;
+    this.setState({
+      start: false,
+      totalMark: total,
+      totalSub: total_sub
+    })
+  }
   render() {
     let list_topics = []
+    let list_marks = []
     this.state.topics.map(function(item, i){
-      list_topics.push(item)
+      list_topics.push((i+1) + ". " + item)
     })
+    this.state.marksForTopics.map(function(item, i){
+      list_marks.push((i+1) + ". " + item)
+    })
+    console.log(this.state.marksForTopicsAsked)
     return (
       <div>
-        {this.state.topics}
         <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
                 <strong>The grade that you have given for this test has been saved!</strong>Go check your saved tests to check them out!!
         </div>
         {
-          this.state.topicsAsked ?
+          this.state.start ?
+          <Form style={{textAlign: 'center'}} onSubmit={(event) => this.handleTotalSubmit(event)}>
+            <Row gutter={20}>
+              <Col style={{textAlign: 'center', marginLeft: '32%'}} span={8}>
+                <Form.Item label="Total mark for all questions">
+                  <Input type="number" name="total_mark" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
+                </Form.Item>
+                <Form.Item label="Total mark given to students for sub questions">
+                    <Input type="number" name="total_sub" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
+                </Form.Item>
+              </Col>
+            </Row>
+            {/* <Form.Item label="Weakest topic"> 
+              <Select ref={ref => {
+                          this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
+                    {list_topics.map(options =>(
+                        <Option value="topic"  value={options}>{options}</Option>
+                    ))}            
+              </Select> 
+            </Form.Item> */}
+          <Form.Item>
+            <Button type="primary" htmlType="submit">Add information</Button>
+            </Form.Item>
+          </Form>
+          :
+          this.state.start == false
+        }
+        
+        {
+          this.state.start == false ?
+
+          this.state.counterTwo != this.state.num_subquestions && this.state.topicsAsked ?
+          <Form onSubmit={(event) => this.handleMarkForTopicSubmit(event,this.state.counterTwo)}>
+            <Form.Item>
+              <Row>
+              <Card bordered style={{color: 'blue', textAlign: 'center', fontSize: '10px'}} title="Topic reminder" bordered={false}>
+                {list_topics.map(options => (
+                    <Col span={12}>
+                            <Statistic title={" "} value={options} suffix={" "} />
+                    </Col>
+                ))}
+              </Card>
+              </Row>
+            </Form.Item>
+            <div style={{textAlign: 'center'}}>
+                <strong>All of your topics were saved! Now add the marks for these topics</strong>
+            </div>
+            <Row>
+              <Col>
+              <Form.Item style={{textAlign: 'center'}} label={"What was the mark for topic " + (this.state.counterTwo+1) + " out of " + this.state.totalSub}>
+                    <NumericInput name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
+                </Form.Item>
+                <Form.Item style={{textAlign: 'center'}}>
+                    <Button type="primary" htmlType="submit">Add Mark</Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+          :
+          this.state.counter != this.state.num_subquestions ?
+          <Form onSubmit={(event) => this.handleTopicSubmit(event,this.state.counter)}>
+            <Row>
+              <Col>
+                <Form.Item style={{textAlign: 'center'}} label={"What was the topic for question " + (this.state.counter+1)}>
+                  <Input style={{width: '150px'}}name="topic" placeholder="" />
+                </Form.Item>
+                <Form.Item style={{textAlign: 'center'}}>
+                    <Button type="primary" htmlType="submit">Add topic</Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
           
-          <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.requestMethod, this.props.testID)}>
+          :
+          
+          <Form onSubmit={(event) => this.handleFormSubmit(event,this.props.requestMethod, this.props.testID)}>
+            <h3 style={{textAlign: 'center'}}>Well done all of your topics were saved!</h3>
+            <h3 style={{textAlign: 'center'}}>Total number of of marks: <b style={{color: 'green'}}>{this.state.totalMark}</b></h3>
+            <h3 style={{textAlign: 'center'}}>Total sub marks: <b style={{color: 'green'}}>{this.state.totalSub}</b></h3>
+            <Form.Item>
+              <Row>
+              <Card bordered style={{color: 'blue', textAlign: 'center', fontSize: '10px'}} title="Topics" bordered={false}>
+                {list_topics.map(options => (
+                    <Col span={12}>
+                            <Statistic title={" "} value={options} suffix={" "} />
+                    </Col>
+                ))}
+                
+              </Card>
+              <Card bordered style={{color: 'blue', textAlign: 'center', fontSize: '10px'}} title="Marks" bordered={false}>
+                
+                {list_marks.map(options => (
+                    <Col span={12}>
+                            <Statistic title={" "} value={options} suffix={" "} />
+                    </Col>
+                ))}
+              </Card>
+              </Row>
+            </Form.Item>
+            <Form.Item style={{textAlign: 'center'}}>
+              <Button type="primary" htmlType="submit">{this.props.btnText}</Button>
+            </Form.Item>
+          </Form>
+          :
+          null
+        }
+        
+      </div>
+    );
+  }
+}
+
+export default GradeForm
+
+
+
+
+
+{/* <Form onSubmit={(event) => this.handleTotalSubmit(event, this.props.requestMethod, this.props.testID)}>
             <div>
                 <strong>All of your topics were saved! Now add more information</strong>
             </div>
@@ -186,45 +356,18 @@ class GradeForm extends React.Component {
                 <Form.Item label="Total mark given to students for sub questions">
                     <Input type="number" name="total_sub" pattern="[0-9]*" onKey Press={this.onKeyPress.bind(this)} />
                 </Form.Item>
-                
               </Col>
-              
             </Row>
-            <Form.Item label="Type of question">
-              
-            <Select ref={ref => {
-                        this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
-                  {list_topics.map(options =>(
-                      <Option value="topic"  value={options}>{options}</Option>
-                  ))}            
-            </Select>
-                  
-            </Form.Item>
+             <Form.Item label="Weakest topic"> 
+              <Select ref={ref => {
+                          this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
+                    {list_topics.map(options =>(
+                        <Option value="topic"  value={options}>{options}</Option>
+                    ))}            
+              </Select> 
+            </Form.Item> 
           <Form.Item>
             <Button type="primary" htmlType="submit">{this.props.btnText}</Button>
             </Form.Item>
-          </Form>
-          :
-          this.state.counter != this.state.num_subquestions ?
-          <Form onSubmit={(event) => this.handleTopicSubmit(event,this.state.counter)}>
-            <Row>
-              <Col>
-                <Form.Item label={"What was the topic for question " + (this.state.counter+1)}>
-                  <Input name="topic" placeholder="" />
-                </Form.Item>
-                <Form.Item style={{textAlign: 'center'}}>
-                    <Button type="primary" htmlType="submit">Add topic</Button>
-                </Form.Item>
-          
-              </Col>
-            </Row>
-          </Form>
-          :
-          <h3>Well done all of your topics were saved!</h3>
-        }
-      </div>
-    );
-  }
-}
-
-export default GradeForm
+          </Form> 
+                    */}

@@ -24,6 +24,7 @@ class ReviewFeedback extends React.Component{
             editedFeedbackGiven: false,
             typeOfFeedback: false,
             feedbackColor: "",
+            topics: ""
         }
         this.onChangeFeedback = this.onChangeFeedback.bind(this)
     }
@@ -40,7 +41,8 @@ class ReviewFeedback extends React.Component{
         let improvement_feedback = [];
         let test_id = 0
         let weakest = ""
-       
+        let list_of_topics = []
+        
         axios.get(`http://127.0.0.1:8000/api/test`)
         .then(res => {
             res.data.map(function(item, i){
@@ -54,11 +56,13 @@ class ReviewFeedback extends React.Component{
                 res.data.map(function(item, i){
                   if(item.test == test_id)
                   {
+                    list_of_topics = item.topics
                     weakest = item.weakest_topic
                   }
                 })
                 this.setState({
-                  AreasOfImprovement: weakest
+                  AreasOfImprovement: weakest,
+                  topics: list_of_topics
                 })
             })
         })
@@ -239,6 +243,9 @@ class ReviewFeedback extends React.Component{
       let score1 = this.props.match.params.correct;
       let score2 = this.props.match.params.incorrect;
       let total_Marks = score1+score2;
+      var list_topics = new Array();
+      list_topics = this.state.topics.split(",")
+    
         return(
             <div >
                 
@@ -247,7 +254,6 @@ class ReviewFeedback extends React.Component{
                     <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '28px'}} title="Test Information" bordered={false}>
                     <Text strong style={{textAlign: 'center', color: '#096dd9'}}>{this.props.match.params.testid}</Text> <br/>
                     <Row gutter={16}>
-
                       <Col span={12}>
                         <Statistic title="Test Grade" value={this.props.match.params.testgrade} suffix={" "} />
                       </Col>
@@ -267,11 +273,19 @@ class ReviewFeedback extends React.Component{
                       <Text strong>Test Mark:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testmark} %</Text> <br/>
                       <Text strong>Correct Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.correct}</Text> <br/>
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/> */}
-                      
                     </Card>
-                    
+                  </Col>
+                  <Col>
+                      <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '28px'}} title="Topic breakdown" bordered={false}>
+                      {list_topics.map(options =>(
+                        <Col span={12}>
+                          <Statistic title={" "} value={options} suffix={" "} />
+                        </Col>
+                      ))}  
+                      </Card>
                   </Col>
                 </Row>
+                
                 <br/>
                 {this.state.feedbackColor == "green" 
                 
@@ -367,7 +381,7 @@ class ReviewFeedback extends React.Component{
                     :
                     <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
                       <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
-                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.quartile}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.level}</Text> : <Spin indicator={antIcon} />} <br/>
                       <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
                     </Card> 
                     }

@@ -233,7 +233,7 @@ class NLTKProcess(View):
         reviewFrame = []
         # for review in Reviews[:50]:
             #use the first 5000 reviews in the reviews dataset.
-        for review in Reviews[:50]:
+        for review in Reviews[:1000]:
             try:
                 jsondata = json.loads(review)
                 reviewFrame.append((jsondata['reviewerID'], jsondata['asin'], jsondata['reviewerName'], jsondata['helpful'][0], jsondata['helpful'][1], jsondata['reviewText'], jsondata['overall'], jsondata['summary'], jsondata['unixReviewTime'], jsondata['reviewTime']))
@@ -327,7 +327,7 @@ class NLTKProcess(View):
                     Alltop_90.append(new_obj)
                     context = Alltop_90
                     #negative feedback for improvment
-                if int(incorrect) < lower_marks and cat == "negative" and rating == 5 or rating == 4:
+                if int(incorrect) < lower_marks and cat == "negative" and (rating == 5 or rating == 4):
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat,
