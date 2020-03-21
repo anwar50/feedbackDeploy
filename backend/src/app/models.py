@@ -91,6 +91,7 @@ class AnswersBank(models.Model):
     total_mark_for_question = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
     topics = models.CharField(max_length=100000, default="None")
     total_sub_marks = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    topic_mark_breakdown = models.CharField(max_length=100000, default="None")
     weakest_topic = models.CharField(max_length=100000, default="None")
     def __str__(self):
         return str(self.total_mark_for_question)

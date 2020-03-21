@@ -24,7 +24,8 @@ class ReviewFeedback extends React.Component{
             editedFeedbackGiven: false,
             typeOfFeedback: false,
             feedbackColor: "",
-            topics: ""
+            topics: "",
+            marks: ""
         }
         this.onChangeFeedback = this.onChangeFeedback.bind(this)
     }
@@ -42,7 +43,7 @@ class ReviewFeedback extends React.Component{
         let test_id = 0
         let weakest = ""
         let list_of_topics = []
-        
+        let list_of_marks = []
         axios.get(`http://127.0.0.1:8000/api/test`)
         .then(res => {
             res.data.map(function(item, i){
@@ -57,12 +58,14 @@ class ReviewFeedback extends React.Component{
                   if(item.test == test_id)
                   {
                     list_of_topics = item.topics
+                    list_of_marks = item.topic_mark_breakdown
                     weakest = item.weakest_topic
                   }
                 })
                 this.setState({
                   AreasOfImprovement: weakest,
-                  topics: list_of_topics
+                  topics: list_of_topics,
+                  marks: list_of_marks
                 })
             })
         })
@@ -244,8 +247,10 @@ class ReviewFeedback extends React.Component{
       let score2 = this.props.match.params.incorrect;
       let total_Marks = score1+score2;
       var list_topics = new Array();
+      var list_marks = new Array();
       list_topics = this.state.topics.split(",")
-    
+      list_marks = this.state.marks.split(",")
+      console.log(list_topics)
         return(
             <div >
                 
@@ -276,12 +281,15 @@ class ReviewFeedback extends React.Component{
                     </Card>
                   </Col>
                   <Col>
-                      <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '28px'}} title="Topic breakdown" bordered={false}>
-                      {list_topics.map(options =>(
+                      <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '18px'}} title="Topic breakdown" bordered={false}>
+                      {list_topics.map((i,j) =>{
+                        return(
                         <Col span={12}>
-                          <Statistic title={" "} value={options} suffix={" "} />
-                        </Col>
-                      ))}  
+                            <Text strong>Title: </Text><Text strong style={{color: '#096dd9'}}>{list_topics[j]}</Text>
+                            <Text strong>Mark: </Text><Text strong style={{color: '#096dd9'}}>{list_marks[j]}</Text>
+                         </Col>
+                        )
+                      })}  
                       </Card>
                   </Col>
                 </Row>

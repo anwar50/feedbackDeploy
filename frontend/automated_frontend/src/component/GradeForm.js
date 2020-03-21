@@ -67,11 +67,33 @@ class GradeForm extends React.Component {
       e.preventDefault();
       let grade = " ";
       let effectiveness = "";
-      const total = e.target.elements.total_mark.value;
-      const total_sub = e.target.elements.total_sub.value;
+      const total = this.state.totalMark;
+      const total_sub = this.state.totalSub;
       //const weakest = e.target.elements.weakest.value;
       const final_mark = parseInt((total_sub/total)*100)
-      const weakest = this.state.type
+
+      //calculate the weakest topic!
+      
+      let lowest = this.state.marksForTopics;
+      let lowestMark = lowest[0];
+      let lowestIndex = 0;
+      for(var i = 1; i < lowest.length; i++)
+      {
+        if(lowest[i] < lowestMark)
+        {
+          lowestMark = lowest[i];
+          lowestIndex = i;
+        }
+      }
+      let weakest = ""
+      this.state.topics.map(function(item, i){
+        if(lowestIndex == i)
+        {
+          weakest = item
+        }
+      })
+      console.log("the lowest topic is: " + weakest)
+      
       if(final_mark >= 70 && final_mark <= 100)
       {
         grade = "A";
@@ -110,15 +132,33 @@ class GradeForm extends React.Component {
             console.log(res) 
             let new_str = "";
             this.state.topics.map(function(item, i){
-              new_str = new_str +","+ item
+              if(i == 0)
+              {
+                new_str = new_str + item
+              }
+              else
+              {
+                new_str = new_str +","+ item
+              }
             })
-            
+            let mark_str = "";
+            this.state.marksForTopics.map(function(item, i){
+              if(i == 0)
+              {
+                mark_str = mark_str + item
+              }
+              else
+              {
+                mark_str = mark_str + "," + item
+              }  
+            })
             console.log(new_str)
             axios.post('http://127.0.0.1:8000/api/create/answer/', {
               test: testID.id,
               total_mark_for_question: total,
               topics: new_str,
               total_sub_marks: total_sub,
+              topic_mark_breakdown: mark_str,
               weakest_topic: weakest,
             })
             .then(res => {
