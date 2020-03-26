@@ -285,8 +285,8 @@ class ReviewFeedback extends React.Component{
                       {list_topics.map((i,j) =>{
                         return(
                         <Col span={12}>
-                            <Text strong>Title: </Text><Text strong style={{color: '#096dd9'}}>{list_topics[j]}</Text>
-                            <Text strong>Mark: </Text><Text strong style={{color: '#096dd9'}}>{list_marks[j]}</Text>
+                            <Text strong >Title: <h8 style={{color: '#096dd9'}}>{list_topics[j]}</h8></Text><br/>
+                            <Text strong >Mark: <h8 style={{color: '#096dd9'}}>{list_marks[j]}</h8></Text>
                          </Col>
                         )
                       })}  
