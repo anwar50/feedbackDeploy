@@ -82,7 +82,7 @@ class CustomLayout extends React.Component {
                 defaultSelectedKeys={['8']}
                 style={{ lineHeight: '64px', fontSize: '15px'}}
             >
-                <Menu.Item style={{float: 'left', color: 'skyblue', fontSize: '24px'}}>
+                <Menu.Item style={{float: 'left', color: 'skyblue', fontSize: '29px'}}>
                    QM Feedback
                 </Menu.Item>
                 

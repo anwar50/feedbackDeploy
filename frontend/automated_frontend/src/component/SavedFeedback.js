@@ -1,9 +1,10 @@
 import React from "react"
-import { List, Typography, Table, Icon, Divider, Button, Alert, Input, Modal} from 'antd';
+import { List, Typography, Table, Icon, Divider, Button, Alert, Input, Modal, Collapse} from 'antd';
 import {Link} from "react-router-dom";
 import axios from "axios";
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
+const { Panel } = Collapse;
 class SavedFeedback extends React.Component {
     constructor(props)
     {
@@ -18,6 +19,9 @@ class SavedFeedback extends React.Component {
             showingAlert: false,
             searchText: '',
             searchedColumn: '',
+            improvement: '',
+            area: '',
+            improvementClicked: false
         }
     }
   
@@ -43,6 +47,30 @@ class SavedFeedback extends React.Component {
                 console.log(this.state.grades)
                 console.log(this.state.savedfeedback)
         }))
+    }
+    handleImprovement (testid){
+        axios.get(`http://127.0.0.1:8000/api/savedimprovements`)
+        .then(res =>{
+          let found = false
+          let temp_area = ""
+          let temp_improvement = ""
+          res.data.map(function(item, i){
+            if(testid == item.test)
+            {
+              found = true
+              temp_area = item.area_of_improvement
+              temp_improvement = item.improvement_feedback
+            }
+          })
+          if(found)
+          {
+            this.setState({
+                area: temp_area,
+                improvement: temp_improvement,
+                improvementClicked: true
+              })
+          }
+        })
     }
     handleDelete (e) {
         console.log(e)
@@ -145,7 +173,15 @@ class SavedFeedback extends React.Component {
       clearFilters();
       this.setState({ searchText: '' });
     };
+    handleClick(){
+      this.setState({
+        improvementClicked: false
+      })
+    }
     render(){
+        function callback(key) {
+          console.log(key);
+        }
         const {id} = this.props.match.params
         console.log(id)
         let test_id = []
@@ -153,6 +189,7 @@ class SavedFeedback extends React.Component {
         let savedtests = []
         let testNames = []
         let modulei_ids = []
+        let testID = 0
         let TEMPMODULES = this.state.module
         let savedGrades = []
         let TEMPGRADES = this.state.grades
@@ -185,6 +222,7 @@ class SavedFeedback extends React.Component {
                         TEMPMODULES.map(function(MODID, i){
                             TEMPFEEDBACKS.map(function(FEEDBACKID, i){
                                 if(item.module == MODID.id && item.id == FEEDBACKID.test){
+                                  testID = item.id
                                     console.log(item.name + " " + GRADE.grade)
                                     temp_test = {
                                         key: index,
@@ -275,7 +313,10 @@ class SavedFeedback extends React.Component {
             render: (text, record) => (
               <span>
                 {/* <a href="#">Action 一 {record.test}</a> */}
+                <Button onClick={(e) => this.handleImprovement(testID)} type="primary" htmlType="submit">See Improvement</Button>
+                <Divider type="vertical" />
                 <Button onClick={(e) => this.handleDelete(record.feedback)} type="danger" htmlType="submit">Delete Feedback</Button>
+
               </span>
             ),
           }];
@@ -283,7 +324,26 @@ class SavedFeedback extends React.Component {
             
             <div>
               <h1 style={{textAlign: 'center'}}>Welcome back {this.props.match.params.id.toUpperCase()} heres a collection of your saved feedbacks!</h1>
-              <Table columns={columns} dataSource={testInfo} />
+              <Table style={{display: "inline-block"}}columns={columns} dataSource={testInfo} />
+              {
+                this.state.improvementClicked ?
+                <div>
+                    <Collapse defaultActiveKey = {['1']} onChange={callback}>
+                    <Panel header="Improvement feedback" key="2">
+                      <p>{this.state.improvement}</p>
+                    </Panel>
+                    <Panel header="Area of improvement" key="3">
+                      <p>{this.state.area}</p>
+                    </Panel>
+                  </Collapse><br/>
+                  <div style={{marginLeft: '40%', marginRight: '50%'}}>
+                    <Button onClick={(e) => this.handleClick()} type="primary">Close popup</Button>
+                  </div>
+                </div>
+                :
+                null
+              }
+              
             </div>
         )
     }

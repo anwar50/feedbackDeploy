@@ -9,6 +9,7 @@ from .models import UserTest
 from .models import SavedFeedback
 from .models import PreProcessedData
 from .models import AnswersBank
+from .models import ImprovementFeedback
 
 # Register your models here.
 # admin.site.register(Question)
@@ -23,3 +24,4 @@ admin.site.register(UserTest)
 admin.site.register(SavedFeedback)
 admin.site.register(PreProcessedData)
 admin.site.register(AnswersBank)
+admin.site.register(ImprovementFeedback)
