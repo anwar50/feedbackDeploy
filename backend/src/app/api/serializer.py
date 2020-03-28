@@ -8,6 +8,7 @@ from app.models import Feedback
 from app.models import UserTest
 from app.models import SavedFeedback
 from app.models import AnswersBank
+from app.models import ImprovementFeedback
 from django.contrib.auth.models import User
 
 class TeacherUserSerializer(serializers.ModelSerializer):
@@ -56,4 +57,8 @@ class SavedTestFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedFeedback
         # extra_kwargs = {'id': {'read_only': False, 'required': False}}
+        fields = '__all__'
+class SavedImprovementFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImprovementFeedback
         fields = '__all__'

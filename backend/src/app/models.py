@@ -18,9 +18,8 @@ class Module(models.Model):
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     department = models.CharField(max_length=200, default='EECS')
-    user_type = models.CharField(max_length=20, default='teacher')
-    profile_pic = models.ImageField(upload_to="pic", default="fdsgf")
-    module = models.CharField(max_length=20, default="None")
+    user_type = models.CharField(max_length=200, default='teacher')
+    avatar = models.CharField(max_length=200, default="None")
     def __str__(self):
         return self.user.username
 class Test(models.Model):
@@ -81,6 +80,13 @@ class SavedFeedback(models.Model):
     created_by = models.CharField(max_length=100, default="None", editable=True)
     def __str__(self):
         return str(self.feedback + " " + self.user)
+class ImprovementFeedback(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    area_of_improvement = models.CharField(max_length=70, default="None")
+    user = models.CharField(max_length=70, default="None")
+    improvement_feedback = models.CharField(max_length=10000, default="None", editable=True)
+    def __str__(self):
+        return str(self.area_of_improvement)
 class PreProcessedData(models.Model):
     processed_feedback = models.CharField(max_length=100000, default="None")
     rating = models.IntegerField(default=0, null=True)

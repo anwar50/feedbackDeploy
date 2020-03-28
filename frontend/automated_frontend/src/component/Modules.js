@@ -16,11 +16,24 @@ class Modules extends React.Component {
       super(props)
       this.state = {
         modules: [],
-
+        users: [],
+        profile: []
       }
     }
     componentDidMount(){
-      console.log("hi")
+      axios.all([
+        axios.get('http://127.0.0.1:8000/api/users'),
+        axios.get('http://127.0.0.1:8000/api/list/profile'),
+    ])
+    .then(axios.spread((users, profile) => {
+            this.setState({
+                users: users.data,
+                profile: profile.data,
+            })
+            console.log(this.state.users)
+            console.log(this.state.profile)
+            
+    }))
     }
     examCreate = () => {
         this.setState({
@@ -38,6 +51,7 @@ class Modules extends React.Component {
         let user_id = 0
         let temp_modules = []
         let module_data = this.props.data
+        
         axios.get('http://127.0.0.1:8000/api/users')
         .then(res => {
             user_data = res.data
@@ -46,16 +60,8 @@ class Modules extends React.Component {
                 {
                     console.log("yes")
                     user_id = item.id
-                    // axios.get('http://127.0.0.1:8000/api/modules')
-                    // .then(modules => {
-                    //     module_data = modules.data
-                    //     module_data.map(function(mod, i){
-                    //         if(mod.user == user_id){
-                    //             temp_modules.push(mod)
-                                
-                    //         }
-                    //     })
-                    // })
+                    
+                  
                     module_data.map(function(mod, i){
                       if(mod.user == user_id){
                           temp_modules.push(mod)         
@@ -63,12 +69,39 @@ class Modules extends React.Component {
                     })
                 }
             })
-           console.log(temp_modules)
+           console.log(temp_modules[0])
+           
            this.setState({
              modules: temp_modules
            })
         })
+        let tempUsers = this.state.users
+        let tempProfile = this.state.profile
+
         
+        
+        let id = 0
+        let profile_picture = ""
+        console.log(id)
+        tempUsers.map(function(item, i){
+            if(item.username == userID)
+            {
+              id = item.id
+            } 
+            
+        })
+        
+        tempProfile.map(function(item, i){
+            if(item.user == id)
+            {
+                        
+                
+                //the_arr.pop();
+                //return( the_arr.join('/') );
+                profile_picture = item.avatar;
+            }
+              
+        })
       return (
           <List
           itemLayout="vertical"
@@ -100,7 +133,7 @@ class Modules extends React.Component {
             >
               Code: {item.code}
               <List.Item.Meta
-                avatar={<Avatar src={item.avatar} />}
+                avatar={<Avatar src={profile_picture} />}
                 title={<Link to={`/modules/${item.id}/${this.props.user}`}>{item.title}</Link>}
                 description={item.description}
                 num={item.num_students}

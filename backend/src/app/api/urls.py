@@ -47,6 +47,11 @@ from .views import (
     SavedFeedbackDeleteView,
     SavedFeedbackDetailView,
     SavedFeedbackUpdateView,
+    SavedImprovementFeedbackCreateView,
+    SavedImprovementFeedbackDeleteView,
+    SavedImprovementFeedbackDetailView,
+    SavedImprovementFeedbackListView,
+    SavedImprovementFeedbackUpdateView,
     AnswersBankCreateView,
     AnswersBankDeleteView,
     AnswersBankDetailView,
@@ -61,7 +66,7 @@ urlpatterns = [
     path('users', CurrentUserViewSet.as_view()),
     ##profile set up
     path('list/profile/', TeacherProfileListView.as_view()),
-    path('profile', TeacherProfileCreateView.as_view()),
+    path('profile/', TeacherProfileCreateView.as_view()),
     path('profile/<pk>/update/', TeacherProfileUpdateView.as_view()),
         ##module url
     path('modules', ModuleListView.as_view()),
@@ -102,6 +107,13 @@ urlpatterns = [
     path('savedfeedback/<pk>', SavedFeedbackDetailView.as_view()),
     path('savedfeedback/<pk>/update/', SavedFeedbackUpdateView.as_view()),
     path('savedfeedback/<pk>/delete/', SavedFeedbackDeleteView.as_view()),
+        ##save improvement feedback information
+    path('savedimprovements', SavedImprovementFeedbackListView.as_view()),
+    path('save/improvement/', SavedImprovementFeedbackCreateView.as_view()),
+    path('savedimprovements/<pk>', SavedImprovementFeedbackDetailView.as_view()),
+    path('savedimprovements/<pk>/update/', SavedImprovementFeedbackUpdateView.as_view()),
+    path('savedimprovements/<pk>/delete/', SavedImprovementFeedbackDeleteView.as_view()),
+        #process the sentiment analysis
     path('processnltk/<test>/<grade>/<mark>/<correct>/<incorrect>/<effectiveness>', NLTKProcess.as_view()),
         ##generated Feedback category
     path('generatedFeedback', FeedbackListView.as_view()),

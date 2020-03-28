@@ -54,7 +54,7 @@ export const authLogin = (username, password) => {
         })
     }
 }
-export const authProfile = (type, username, modulename) => {
+export const authProfile = (type, username, avatar) => {
     console.log("fd")
     let user_data = []
     axios.get(`http://127.0.0.1:8000/api/users`)
@@ -62,30 +62,29 @@ export const authProfile = (type, username, modulename) => {
             user_data = res.data
             user_data.map(function(item, i){
                 if(item.username == username){
-                    console.log(item.username)
-                    axios.post(`http://127.0.0.1:8000/api/profile`, {
+                    console.log(item.id)
+                    axios.post(`http://127.0.0.1:8000/api/profile/`, {
                         user: item.id,
                         department: 'EECS COMPUTER SCIENCE',
                         user_type: type, 
-                        username: username,
-                        module: modulename
+                        avatar: avatar
                     })
                     .then(res => {
                         console.log(res)
                     })
                     .catch(err => {
                         // dispatch(authFail(err))
-                        console.log("Error")
+                        console.log(err)
                     })
                 }
             })
             console.log(user_data)
         })
 }
-export const authSignup = (username, email, password1, password2, modulename) => {
+export const authSignup = (username, email, password1, password2, avatar) => {
     return dispatch => {
         let teacher = ''
-        console.log(modulename)
+        console.log(avatar.props.src)
         console.log(username)
         console.log(password2)
         dispatch(authStart());
@@ -103,7 +102,7 @@ export const authSignup = (username, email, password1, password2, modulename) =>
             dispatch(authSuccess(token));
             dispatch(checkAuthTimeout(3600));
             teacher = 'Teacher'
-            dispatch(authProfile(teacher, username, modulename))
+            dispatch(authProfile(teacher, username, avatar.props.src))
         })
         .catch(err => {
             dispatch(authFail(err))

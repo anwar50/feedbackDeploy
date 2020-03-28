@@ -1,11 +1,13 @@
 import React from "react"
 import {Link} from "react-router-dom";
 import axios from "axios";
-import { Form, Button, Table, Divider, RollbackOutlined, Modal } from "antd";
+import { Form, Button, Table, Divider, RollbackOutlined, Modal, Typography } from "antd";
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import {CSVLink, CSVDownload} from 'react-csv';
 import pdfmake from "pdfmake";
 import '../css/Layout.css';
+const {Text} = Typography;
+
 class GeneratedFeedback extends React.Component {
     constructor(props)
     {
@@ -112,19 +114,66 @@ class GeneratedFeedback extends React.Component {
         }
         console.log(test + " " + grade + " " + feedback + " " + user + " " + percentage)
     }
-    // Export(test, grade, feedback, percentage)
-    // {
-    //   let new_obj = {
-    //     test: test,
-    //     grade: grade,
-    //     feedback: feedback,
-    //     percentage: percentage
-    //   }
-    //   this.setState({
-    //     docDefinition:  new_obj
-    //   })
-    //   pdfmake.createPdf(this.state.docDefinition).download('optionalName.pdf');;
-    // }
+
+    handleSaveImprovement(test, grade, area, feedback, user) {
+      let found = false
+      let tempgrade = this.state.grades;
+      let temptest = this.state.test;
+      let grade_id = 0;
+      let test_id = 0;
+      
+      tempgrade.map(function(gradeID, i){
+          if(gradeID.grade == grade)
+          {
+              grade_id = gradeID.id
+              temptest.map(function(testID, i){
+                  if(testID.name == test)
+                  {
+                      test_id = testID.id
+                      found = true
+                      console.log("true")
+                  }
+              })
+          }
+      })
+      if(found)
+      {
+          axios.post(`http://127.0.0.1:8000/api/save/improvement/`,{
+                  test: test_id,
+                  area_of_improvement: area,
+                  user: user,
+                  improvement_feedback: feedback,
+          })
+          // this.setState({
+          //   showingAlert: true
+          // });
+          // setTimeout(() => {
+          //   this.setState({
+          //     showingAlert: false,
+          //   });
+          // }, 5000);
+          let secondsToGo = 10;
+          const modal = Modal.success({
+            title: 'The improvement Feedback for ' + test + ' has been saved! Go check your saved feedbacks to check them out!!',
+            content: `Your feedback has been saved! Go check your saved feedbacks to check them out!!`,
+          });
+          const timer = setInterval(() => {
+            secondsToGo -= 1;
+            modal.update({
+              content: `This message will be destroyed after ${secondsToGo} seconds.`,
+            });
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(timer);
+            modal.destroy();
+          }, secondsToGo * 1000);
+      }
+      else
+      {
+          alert("Could not save the improvement feedback!")
+      }
+      console.log(test + " " + grade + " " + feedback + " " + user )
+  }
     render(){
         var divStyle = {
             height: "40vh", /* Magic here */
@@ -205,33 +254,73 @@ class GeneratedFeedback extends React.Component {
               <span>
                 {/* <a href="#">Action 一 {record.test}</a> */}
                 <Button onClick={(e) => this.handleSave(record.test, record.grade, this.props.match.params.feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
-                <Divider type="vertical" />
-                <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedback</Button></CSVLink>
+                <Divider type="horizontal" />
+                <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
+
            </span>
             ),
           }];
-          //let score = Math.round(this.props.match.params.score * 100)
+          const Imrpovementcolumns = [{
+            title: 'Imrpovement Feedback',
+            dataIndex: 'feedback',
+            key: 'feedback',
+            render: (text) => {
+                        //    console.log(text);
+              return {
+                children: text,
+                props: {
+                  'data-tip': 'a very long text',
+                   
+                },
+              };
+            },
+          }, {
+            title: 'Area (s) of improvement',
+            dataIndex: 'areaOfImprovement',
+            key: 'areaOfImprovement',
+          },{
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+              <span>
+                {/* <a href="#">Action 一 {record.test}</a> */}
+                <Button onClick={(e) => this.handleSaveImprovement(this.props.match.params.testid, this.props.match.params.testgrade, record.areaOfImprovement, record.feedback, this.props.match.params.userid)} type="primary" htmlType="submit">Save Improvement Feedback</Button>
+                <Divider type="horizontal" />
+                <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this improvement feedback</Button></Link>
+           </span>
+            ),
+          }];
+          let score = Math.round(this.props.match.params.score * 100)
 
           const testInfo = [{
             key: '1',
             test: this.props.match.params.testid,
             grade: this.props.match.params.testgrade,
             feedback: this.props.match.params.feedback,
-            percentage: this.props.match.params.score + "%"
+            percentage: score + "%"
+          }];
+          const improvementInfo = [{
+            key: '1',
+            feedback: this.props.match.params.improvement,
+            areaOfImprovement: this.props.match.params.topicImprovement
           }];
         return(
             <div>
+                <h2 style={{color: 'skyblue', display: 'flex', justifyContent: 'center'}} >Here's a summary of your chosen feedback</h2>
                 <Link to={`/reviewFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.props.match.params.effect  + `/` +this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
                 <Table id="test" columns={columns} dataSource={testInfo} />
-                <div style={{marginLeft: '40%', marginRight: '50%'}} >
+                {/* <div style={{marginLeft: '40%', marginRight: '50%'}} >
                   <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
-                </div><br/>
+                </div><br/> */}
                 {/*   ############IMPROVEMENT TABLE############      */}
-                <Table id="test" columns={columns} dataSource={testInfo} />
-                <div style={{marginLeft: '40%', marginRight: '50%'}} >
+                <h2 style={{color: 'skyblue', display: 'flex', justifyContent: 'center'}} >Here's a summary of your chosen improvement feedback</h2>
+                <Table id="test2" columns={Imrpovementcolumns} dataSource={improvementInfo} />
+                {/* <div style={{marginLeft: '40%', marginRight: '50%'}} >
                   <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this improvement feedback</Button></Link>
+                </div> */}
+                <div style={{marginLeft: '40%', marginRight: '50%'}}>
+                  <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedbacks</Button></CSVLink>
                 </div>
-                
             </div>
         )
     }

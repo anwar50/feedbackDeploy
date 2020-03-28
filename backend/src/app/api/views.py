@@ -1,5 +1,5 @@
 
-from app.models import Module, Test, TeacherProfile, Grade, FeedbackBankTwo, UserTest, Feedback, SavedFeedback, PreProcessedData, AnswersBank
+from app.models import Module, Test, TeacherProfile, Grade, FeedbackBankTwo, UserTest, Feedback, SavedFeedback, PreProcessedData, AnswersBank,ImprovementFeedback
 from django.contrib.auth.models import User
 from django.views import View
 from rest_framework import viewsets
@@ -13,7 +13,8 @@ from .serializer import (
     FeedbackGeneratorSerializer,
     SavedTestFeedbackSerializer,
     TeacherUserSerializer,
-    AnswersBankSerializer
+    AnswersBankSerializer,
+    SavedImprovementFeedbackSerializer
 )
 from rest_framework.decorators import api_view
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -178,6 +179,22 @@ class SavedFeedbackUpdateView(UpdateAPIView):
 class SavedFeedbackDeleteView(DestroyAPIView):
     queryset = SavedFeedback.objects.all()
     serializer_class = SavedTestFeedbackSerializer
+ #save the improvement feedback
+class SavedImprovementFeedbackListView(ListAPIView):
+    queryset = ImprovementFeedback.objects.all()
+    serializer_class = SavedImprovementFeedbackSerializer
+class SavedImprovementFeedbackCreateView(CreateAPIView):
+    queryset = ImprovementFeedback.objects.all()
+    serializer_class = SavedImprovementFeedbackSerializer
+class SavedImprovementFeedbackDetailView(RetrieveAPIView):
+    queryset = ImprovementFeedback.objects.all()
+    serializer_class = SavedImprovementFeedbackSerializer
+class SavedImprovementFeedbackUpdateView(UpdateAPIView):
+    queryset = ImprovementFeedback.objects.all()
+    serializer_class = SavedImprovementFeedbackSerializer
+class SavedImprovementFeedbackDeleteView(DestroyAPIView):
+    queryset = ImprovementFeedback.objects.all()
+    serializer_class = SavedImprovementFeedbackSerializer
  #signup views..
 class TeacherProfileListView(ListAPIView):
     queryset = TeacherProfile.objects.all()

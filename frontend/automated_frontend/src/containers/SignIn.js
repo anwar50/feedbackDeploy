@@ -45,9 +45,7 @@ class NormalLoginForm extends React.Component {
             console.log(res.data) 
             console.log(user_type)
             //redirect you to home page after login
-            
             this.props.history.push(`/savedtests/` + values.userName + '/');
-            
         })
     });
   }

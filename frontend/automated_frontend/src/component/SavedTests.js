@@ -602,8 +602,6 @@ class SavedTests extends React.Component {
                 <Divider type="vertical" />
                 <Button onClick={(e) => this.toggle(record.test, record.name)} type="primary" htmlType="submit">Update Test</Button>
                 <Divider type="vertical" />
-                <Button onClick={(e) => this.toggleGrade(record.test, record.name)} type="primary" htmlType="submit">Update Grade</Button>
-                <Divider type="vertical" />
                 <Button onClick={(e) => this.handleDelete(record.test)} type="danger" htmlType="submit">Delete Test</Button>
               </span>
             ),
@@ -622,26 +620,6 @@ class SavedTests extends React.Component {
             <div>
               <h1 style={{textAlign: 'center'}}>Welcome back {this.props.match.params.id.toUpperCase()} heres a summary of your saved tests!</h1>
                 <Table columns={columns} dataSource={testInfo} />
-                {this.state.showPopup ?  
-                  <UpdateTestPopUp  
-                            text='Click "Close Button" to hide popup'  
-                            closePopup={this.toggle}  
-                            testName={this.state.testName}
-                            moduleName={this.state.moduleName}
-                            userID={this.props.match.params.id}
-                  />  
-                : null  
-                }  
-                {this.state.showPopupGrade ?  
-                  <UpdateGradePopUp  
-                            text='Click "Close Button" to hide popup'  
-                            closePopup={this.toggleGrade}  
-                            testName={this.state.testName}
-                            moduleName={this.state.moduleName}
-                  />  
-                : null  
-                }  
-                
             </div>
         )
     }

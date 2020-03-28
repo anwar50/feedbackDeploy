@@ -1,16 +1,24 @@
 import React from 'react';
-import { Form, Input, Icon, Button } from 'antd';
+import { Form, Input, Icon, Button, Select, Avatar } from 'antd';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import * as actions from '../store/actions/authActions';
-
+const {Option} = Select;
 const FormItem = Form.Item;
 
 class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
-    modulename: ''
+    modulename: '',
+    type: 'default'
   };
+  handleChange = (e) => {
+    const val = e.label
+    console.log(val)
+    this.setState({
+      type: e.label
+    })
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -20,7 +28,7 @@ class RegistrationForm extends React.Component {
             values.email,
             values.password,
             values.confirm,
-            values.module
+            this.state.type
         );
         this.state.modulename = values.module
         console.log(this.state.modulename)
@@ -104,7 +112,18 @@ class RegistrationForm extends React.Component {
                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Module" />
             )}
         </FormItem>
-
+              You must choose an avatar!
+        <FormItem>
+              {getFieldDecorator('avatar',{
+                rules: [{required: true, message: 'Please provide an avatar! '}],
+              })(<Select ref={ref => {
+                    this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
+                      <Option value="avatar1"><Avatar size={54} src="https://img.icons8.com/bubbles/100/000000/user.png" /></Option>
+                      <Option value="avatar2"><Avatar size={54} src="https://img.icons8.com/material-rounded/96/000000/user.png" /></Option>
+                      <Option value="avatar3"><Avatar size={54} src="https://img.icons8.com/officel/80/000000/user.png" /></Option>
+                </Select>
+                )}
+        </FormItem>
         <FormItem>
         <Button type="primary" htmlType="submit" style={{marginRight: '10px'}}>
             Signup

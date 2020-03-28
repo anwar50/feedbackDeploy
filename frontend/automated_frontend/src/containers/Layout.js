@@ -31,7 +31,9 @@ class CustomLayout extends React.Component {
                 })
                 console.log(this.state.users)
                 console.log(this.state.profile)
+                
         }))
+        
     }
     logout = () => {
         this.props.history.push('/home');
@@ -57,10 +59,10 @@ class CustomLayout extends React.Component {
             if(item.user == user_id)
             {
                         
-                var the_arr = item.profile_pic.split('/');
+                ;
                 //the_arr.pop();
                 //return( the_arr.join('/') );
-                profile_picture = the_arr.pop()
+                profile_picture = item.avatar;
             }
               
         })
@@ -72,19 +74,18 @@ class CustomLayout extends React.Component {
             <Layout className="layout">
             <Header>
             <div className="logo" />
+            
             <Menu
                 align = "right"
                 theme="dark"
                 mode="horizontal"
                 defaultSelectedKeys={['8']}
-                style={{ lineHeight: '64px' }}
+                style={{ lineHeight: '64px', fontSize: '15px'}}
             >
-                {
-                    this.props.isAuthenticated ?
-                    <Avatar style={{ textAlign: 'center', color: '#f56a00', backgroundColor: '#fde3cf', width: '40px', height: '40px'}}>{this.props.username}</Avatar>
-                    :
-                    null
-                }
+                <Menu.Item style={{float: 'left', color: 'skyblue', fontSize: '24px'}}>
+                   QM Feedback
+                </Menu.Item>
+                
                 {
                     this.props.isAuthenticated ? 
                         //the onclick function had this.props.logout before you took it out!
@@ -125,20 +126,25 @@ class CustomLayout extends React.Component {
                 <Menu.Item key="3">
                     <Link to="/grade">Grade Mechanism</Link>
                 </Menu.Item>
-                {/* <Menu.Item key="5">
-                    <Link to="/feedbackInfo">Feedback Mechanism</Link>
-                </Menu.Item> */}
+                {
+                    this.props.isAuthenticated ?
+                    // <Avatar style={{ textAlign: 'center', color: '#f56a00', backgroundColor: '#fde3cf', width: '40px', height: '40px'}}>{this.props.username}</Avatar>
+                    <Avatar size={54} src={profile_picture} />
+                    :
+                    null
+                }
+                
             </Menu>
             </Header>
             <Content style={{ padding: '0 50px' }}>
             <Breadcrumb align = "right" style={{ margin: '16px 0' }}>
-                <div className="title">Feedback Generator </div>
+                <div className="title"> Welcome to  QM Feedback, designed to give you the best feedback for your tests! </div>
             </Breadcrumb>
             <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
                 {this.props.children}
             </div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>Copyright ©2019 Created by Anwar</Footer>
+            <Footer style={{ textAlign: 'center' }}>Copyright ©2019</Footer>
         </Layout>
         );
     }
