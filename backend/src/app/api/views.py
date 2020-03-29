@@ -488,7 +488,7 @@ class NLTKProcess(View):
                     print("this person should be given a neutral feedback")
             if grade == "D":
                 #students with 50% and higher
-                if int(mark) >= 40 and int(mark) < 50 and score >= -0.7 and score < -0.8 and cat == "negative":
+                if int(mark) >= 40 and int(mark) < 50 and score < -0.7 and score >= -0.8 and cat == "negative":
                     new_obj = {'score': score,
                                 'review': review,
                                 'category': cat,
