@@ -1,10 +1,8 @@
 import React from "react"
 import {Link} from "react-router-dom";
 import axios from "axios";
-import { Form, Button, Table, Divider, RollbackOutlined, Modal, Typography } from "antd";
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import {CSVLink, CSVDownload} from 'react-csv';
-import pdfmake from "pdfmake";
+import {Button, Table, Divider, Modal, Typography } from "antd";
+import {CSVLink} from 'react-csv';
 import '../css/Layout.css';
 const {Text} = Typography;
 
@@ -84,14 +82,7 @@ class GeneratedFeedback extends React.Component {
                     percentage: percentage,
                     created_by: "Feedback generator",
             })
-            // this.setState({
-            //   showingAlert: true
-            // });
-            // setTimeout(() => {
-            //   this.setState({
-            //     showingAlert: false,
-            //   });
-            // }, 5000);
+            
             let secondsToGo = 10;
             const modal = Modal.success({
               title: 'Feedback for ' + test + ' has been saved! Go check your saved feedbacks to check them out!!',
@@ -144,14 +135,7 @@ class GeneratedFeedback extends React.Component {
                   user: user,
                   improvement_feedback: feedback,
           })
-          // this.setState({
-          //   showingAlert: true
-          // });
-          // setTimeout(() => {
-          //   this.setState({
-          //     showingAlert: false,
-          //   });
-          // }, 5000);
+          
           let secondsToGo = 10;
           const modal = Modal.success({
             title: 'The improvement Feedback for ' + test + ' has been saved! Go check your saved feedbacks to check them out!!',
@@ -309,15 +293,9 @@ class GeneratedFeedback extends React.Component {
                 <h2 style={{color: 'skyblue', display: 'flex', justifyContent: 'center'}} >Here's a summary of your chosen feedback</h2>
                 <Link to={`/reviewFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.props.match.params.effect  + `/` +this.props.match.params.userid}><ion-icon src="../images/arrow-back-outline.PNG">Back</ion-icon></Link>
                 <Table id="test" columns={columns} dataSource={testInfo} />
-                {/* <div style={{marginLeft: '40%', marginRight: '50%'}} >
-                  <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
-                </div><br/> */}
                 {/*   ############IMPROVEMENT TABLE############      */}
                 <h2 style={{color: 'skyblue', display: 'flex', justifyContent: 'center'}} >Here's a summary of your chosen improvement feedback</h2>
                 <Table id="test2" columns={Imrpovementcolumns} dataSource={improvementInfo} />
-                {/* <div style={{marginLeft: '40%', marginRight: '50%'}} >
-                  <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this improvement feedback</Button></Link>
-                </div> */}
                 <div style={{marginLeft: '40%', marginRight: '50%'}}>
                   <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedbacks</Button></CSVLink>
                 </div>

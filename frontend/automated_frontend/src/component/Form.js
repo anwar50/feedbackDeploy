@@ -97,6 +97,8 @@ class CustomForm extends React.Component {
             })
             .then(res => console.log(res))
             .catch(err => console.log(err))
+        default:
+          return "Couldnt add the module!"
       }
   }
   onKeyPress(event) {

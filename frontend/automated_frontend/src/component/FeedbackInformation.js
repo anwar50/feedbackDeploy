@@ -1,11 +1,8 @@
 import React from "react"
 import {Link} from "react-router-dom";
 import axios from "axios";
-import { Form, Button, Table, Divider, Input,Card, Col, Row,notification  } from "antd";
-import {CSVLink, CSVDownload} from 'react-csv';
+import { Button, Card, Col, Row,notification  } from "antd";
 import '../css/Layout.css';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
 class FeedbackInformation extends React.Component {
     constructor(props)
     {
@@ -116,12 +113,8 @@ class FeedbackInformation extends React.Component {
         let test_grade = 0
         let test_mark = 0
         let effect = ""
-        let min = 1
         let correct = 0
         let incorrect = 0
-        let total = 0
-        let max = this.state.generatedFeedback.length
-        let randNum = Math.floor(Math.random()*(max-min+1)+min)
         let final_generated_feedback = []
         let sub_questions = 0
             //first get the id of the test based on the test name given

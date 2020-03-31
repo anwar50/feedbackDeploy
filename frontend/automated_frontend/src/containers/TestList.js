@@ -1,14 +1,8 @@
 import React from "react";
-import Modules from "../component/Modules";
 import axios from "axios";
-import CustomForm from "../component/Form";
 import "../css/ModuleList.css"
-import Tests from "../component/Tests";
 import {Link} from "react-router-dom";
-import {Input, Button, Table, Divider, Tag, PageHeader, Form} from "antd";
-const {TextArea} = Input;
-
-//import {Button} from "antd";
+import {Button, Table, Divider} from "antd";
 class TestList extends React.Component {
     constructor(props)
     {
@@ -95,7 +89,6 @@ class TestList extends React.Component {
         let title = ''
         let name = ''
         let questiontype = ''
-        let student_num = 0
         let question_id = 0
         let module_id = 0
         let date = ''
