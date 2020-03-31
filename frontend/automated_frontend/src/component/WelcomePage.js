@@ -18,8 +18,8 @@ class WelcomePage extends React.Component {
       ]}
     >
       <div style={{textAlign: 'center',  marginLeft: "30%", marginRight: '50%', margin: '23px'}}>
-        <Link to="/login"><Button style={{margin: '5px'}}key="3">Login</Button></Link>
-        <Link to="/registerteacher/"><Button key="2">Sign Up</Button></Link>
+        <Link to="/login"><Button size="large" style={{margin: '5px'}}key="3">Login</Button></Link>
+        <Link to="/registerteacher/"><Button size="large" key="2">Sign Up</Button></Link>
       </div>
       <Descriptions style={{textAlign: 'center'}} size="large" column={1}>
         <Descriptions.Item  label=""><p style={{color: 'black', fontSize: '29px'}}>Here are a list of features that this web application has to offer!</p></Descriptions.Item>

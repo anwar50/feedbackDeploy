@@ -8,7 +8,6 @@ import GradeMechanism from "./component/Grade"
 import Grade from "./containers/addGrade";
 import AddModule from "./containers/addModule";
 import FeedbackMechanism from "./containers/FeedbackMechanism.js";
-import Home from "./component/Home"
 import DetailTestview from "./containers/DetailTestView"
 import CreateExam from "./containers/CreateExam";
 import SignUpTeacher from "./containers/SignUpTeacher";
@@ -34,7 +33,6 @@ const BaseRouter = (props) => (
             <Route exact path="/createExam/:id/:userid" component={CreateExam} />
             <Route exact path="/addmodule/:userid" component={AddModule} />
             <Route exact path="/feedbackInfo" component={FeedbackMechanism} />
-            <Route exact path="/home" component={Home} />
             <Route exact path="/savedtests/:id" component={SavedTests} />
             <Route exact path="/savedfeedbacks/:id" component={SavedFeedback} />
             <Route exact path="/generatefeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:score/:feedback/:improvement/:topicImprovement/:effect/:userid" component={GeneratedFeedback} />

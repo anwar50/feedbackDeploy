@@ -4,8 +4,7 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-import UpdateTestPopUp from "./UpdateTestPopUp";
-import UpdateGradePopUp from "./UpdateGradePopUp";
+
 const {Option} = Select;
 class SavedTests extends React.Component {
     constructor(props)
