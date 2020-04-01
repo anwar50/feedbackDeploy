@@ -93,6 +93,7 @@ class TestList extends React.Component {
         let module_id = 0
         let date = ''
         let count = 0
+        let student_num = 0
         let description = ''
             //collect the questions set if there is any
         {this.state.questions.map(function(item, i){

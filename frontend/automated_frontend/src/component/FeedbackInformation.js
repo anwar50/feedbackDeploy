@@ -114,6 +114,7 @@ class FeedbackInformation extends React.Component {
         let test_mark = 0
         let effect = ""
         let correct = 0
+        let total = 0
         let incorrect = 0
         let final_generated_feedback = []
         let sub_questions = 0

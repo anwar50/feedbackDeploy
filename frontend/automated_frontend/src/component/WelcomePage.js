@@ -1,6 +1,7 @@
 import React from "react"
 import {PageHeader, Button, Descriptions} from "antd";
 import {Link} from "react-router-dom"
+import '../css/Welcome.css';
 class WelcomePage extends React.Component {
   state = {
     size: 'large'
@@ -26,13 +27,22 @@ class WelcomePage extends React.Component {
       </Descriptions>
     
     <div style={{marginLeft: '20%', color: 'skyblue', fontSize: '20px'}}>
-        <Descriptions size="small" column={3}>
-          <Descriptions.Item label="Generate multiple feedbacks for a single test!"></Descriptions.Item>
-          <Descriptions.Item label="Feedbacks generated for exams, mid terms and even for revision!">
-          </Descriptions.Item><br/>
-          <Descriptions.Item label="See improvement feedback for weak topics"></Descriptions.Item>
-          <Descriptions.Item label="Save and export feedback and test information"></Descriptions.Item>
+        <Descriptions className="popupwelcome" style={{width: "300px", height: "50px", margin: '5px'}}size="20" column={1}>
+          <Descriptions.Item  style={{margin: '5px'}} label="1. Generate multiple feedbacks for a single test!"></Descriptions.Item>
         </Descriptions>
+        <Descriptions className="popupwelcome" style={{width: "450px", height: "50px"}}size="20" column={1}>
+          <Descriptions.Item label="2. Feedbacks generated for exams, mid terms and even for revision!"></Descriptions.Item>
+        </Descriptions><br/>
+        <Descriptions className="popupwelcome" style={{width: "300px", height: "50px", margin: '5px'}}size="20" column={1}>
+          <Descriptions.Item  label="3. See improvement feedback for weak topics"></Descriptions.Item>
+        </Descriptions>
+        <Descriptions className="popupwelcome" style={{width: "350px", height: "50px"}}size="20" column={1}>
+          <Descriptions.Item  label="4. Save and export feedback and test information"></Descriptions.Item>
+        </Descriptions>
+         {/* <Descriptions.Item className="popupwelcome" label="2. Feedbacks generated for exams, mid terms and even for revision!">
+          </Descriptions.Item><br/>
+          <Descriptions.Item className="popupwelcome" label="3. See improvement feedback for weak topics"></Descriptions.Item><br/>
+          <Descriptions.Item className="popupwelcome" label="4. Save and export feedback and test information"></Descriptions.Item> */}
     </div>
     </PageHeader>
     
