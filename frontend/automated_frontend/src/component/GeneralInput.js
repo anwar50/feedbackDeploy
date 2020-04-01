@@ -22,7 +22,7 @@ function formatNumber(value) {
     return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
   }
   
-  class NumericInput extends React.Component {
+  class GeneralInput extends React.Component {
     onChange = e => {
       const { value } = e.target;
       const reg = /^-?[0-9]*(\.[0-9]*)?$/;
@@ -31,7 +31,6 @@ function formatNumber(value) {
       }
     };
   
-    // '.' at the end or only '-' in the input box.
     onBlur = () => {
       const { value, onBlur, onChange } = this.props;
       let valueTemp = value;
@@ -49,7 +48,7 @@ function formatNumber(value) {
       const title = value ? (
         <span className="numeric-input-title">{value !== '-' ? formatNumber(value) : '-'}</span>
       ) : (
-        'Input a number'
+        'Input a valid number please!'
       );
       return (
         <Tooltip
@@ -62,7 +61,7 @@ function formatNumber(value) {
             {...this.props}
             onChange={this.onChange}
             onBlur={this.onBlur}
-            placeholder="Input a number"
+            placeholder="Input a value..."
             maxLength={25}
           />
         </Tooltip>
@@ -70,4 +69,4 @@ function formatNumber(value) {
     }
   }
 
-  export default NumericInput
+  export default GeneralInput

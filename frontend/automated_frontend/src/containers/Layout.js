@@ -59,7 +59,7 @@ class CustomLayout extends React.Component {
             if(item.user == user_id)
             {
                         
-                ;
+                
                 //the_arr.pop();
                 //return( the_arr.join('/') );
                 profile_picture = item.avatar;
@@ -69,6 +69,7 @@ class CustomLayout extends React.Component {
         
         console.log(this.props)
         console.log(this.props.username)
+        console.log(this.state.users)
         console.log(profile_picture)
         return(
             <Layout className="layout">
@@ -82,8 +83,8 @@ class CustomLayout extends React.Component {
                 defaultSelectedKeys={['8']}
                 style={{ lineHeight: '64px', fontSize: '15px'}}
             >
-                <Menu.Item style={{float: 'left', color: 'skyblue', fontSize: '29px'}}>
-                   QM Feedback
+                <Menu.Item style={{float: 'left', color: 'skyblue', fontSize: '29px'}} key="22">
+                   <Link to="/">QM Feedback</Link>
                 </Menu.Item>
                 
                 {

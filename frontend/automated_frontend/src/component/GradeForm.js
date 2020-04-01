@@ -1,7 +1,7 @@
 import { Form, Input, Button, Row, Col, Select, message, Card, Statistic} from 'antd';
 import React from "react"
 import axios from "axios";
-import NumericInput from "./NumericInput"
+import GradeMark from "./GeneralInput"
 import {Link} from "react-router-dom";
 const {Option} = Select;
 
@@ -316,7 +316,7 @@ class GradeForm extends React.Component {
             <Row>
               <Col>
               <Form.Item style={{textAlign: 'center'}} label={"What was the mark for topic " + (this.state.counterTwo+1) + " out of " + this.state.totalSub}>
-                    <NumericInput name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
+                    <GradeMark name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
                 </Form.Item>
                 <Form.Item style={{textAlign: 'center'}}>
                     <Button type="primary" htmlType="submit">Add Mark</Button>

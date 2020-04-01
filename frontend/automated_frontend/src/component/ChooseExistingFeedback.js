@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import '../css/Layout.css';
 import '../css/reviewFeedback.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import NumericInput from "./NumericInput"
+import FeedbackInput from "./GeneralInput.js"
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 const {Text} = Typography;
 
@@ -20,7 +20,12 @@ class ChooseExistingFeedback extends React.Component{
             feedbackAmount: 0,
             feedbackAmountState: false,
             collectionFeedback: true,
-            value: ''
+            value: '',
+            improvementFeedback: [],
+            AreasOfImprovement: "",
+            marks: "",
+            topics: "",
+            giveImprovement: false,
         }
     }
     onChange = value => {
@@ -83,11 +88,43 @@ class ChooseExistingFeedback extends React.Component{
         const total = this.state.value;
         let random_data = [];
         let temp_feedback = [];
+        let improvement_feedback = [];
         console.log(total);
+        let test_id = 0;
+        let list_of_marks = []
+        let list_of_topics = []
+        let weakest = ""
+        axios.get(`http://127.0.0.1:8000/api/test`)
+        .then(res => {
+            res.data.map(function(item, i){
+              if(testName == item.name)
+              {
+                test_id = item.id
+              }
+            })
+            axios.get(`http://127.0.0.1:8000/api/answers`)
+            .then(res => {
+                res.data.map(function(item, i){
+                  if(item.test == test_id)
+                  {
+                    list_of_topics = item.topics
+                    list_of_marks = item.topic_mark_breakdown
+                    weakest = item.weakest_topic
+                  }
+                })
+                this.setState({
+                  AreasOfImprovement: weakest,
+                  topics: list_of_topics,
+                  marks: list_of_marks
+                })
+            })
+        })
         axios.get(`http://127.0.0.1:8000/api/processnltk/${testName}/${testGrade}/${testMark}/${correct}/${incorrect}/${effect}`)
         .then(res => {
             console.log(res.data)
             temp_feedback = res.data[0]
+            improvement_feedback = res.data[1]
+            var improvement = improvement_feedback[Math.floor(Math.random()*improvement_feedback.length)]
             // var random_feedback = res.data[Math.floor(Math.random()*res.data.length)];
             for(let i = 0; i < total; i++)
             {
@@ -97,6 +134,8 @@ class ChooseExistingFeedback extends React.Component{
             this.setState({
                 data: random_data,
                 collectionFeedback: false,
+                improvementFeedback: improvement,
+                giveImprovement: true,
             })
         })
         this.setState({
@@ -139,7 +178,11 @@ class ChooseExistingFeedback extends React.Component{
       let incorrect = this.props.match.params.incorrect
       let score = this.props.match.params.score;
       let effect = this.props.match.params.effect;
-      let user = this.props.match.params.userid
+      let user = this.props.match.params.userid;
+      var list_topics = new Array();
+      var list_marks = new Array();
+      list_topics = this.state.topics.split(",")
+      list_marks = this.state.marks.split(",")
         return(
             <div >
                 
@@ -155,6 +198,18 @@ class ChooseExistingFeedback extends React.Component{
                       <Text strong>Correct Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.correct}</Text> <br/>
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/>
                     </Card>
+                  </Col>
+                  <Col>
+                      <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '18px'}} title="Topic breakdown" bordered={false}>
+                      {list_topics.map((i,j) =>{
+                        return(
+                        <Col span={12}>
+                            <Text strong >Title: <h8 style={{color: '#096dd9'}}>{list_topics[j]}</h8></Text><br/>
+                            <Text strong >Mark: <h8 style={{color: '#096dd9'}}>{list_marks[j]}</h8></Text>
+                         </Col>
+                        )
+                      })}  
+                      </Card>
                   </Col>
                   {
                     this.state.collectionFeedback ?
@@ -197,20 +252,28 @@ class ChooseExistingFeedback extends React.Component{
                             </Card>
                             
                             <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link>
-                            
+              
                           </Col>
                         )
                       })}
+                      {/* Improvement feedback */}
+                      <Col>
+                        <Card bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
+                          <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
+                          <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.level}</Text> : <Spin indicator={antIcon} />} <br/>
+                          <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.category}</Text>: <Spin indicator={antIcon} />} <br />
+                        </Card> 
+                      </Col>
                     </div>
                   }
                 </Row>
                  : 
                  <Form onSubmit={(event) => this.handleFormSubmit(event, this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect, this.props.match.params.effect)}>
                     <Form.Item style={{textAlign: 'center'}} label="How many feedbacks would you like to see? (maximum 5)">
-                        <NumericInput name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
+                        <FeedbackInput name="amount" style={{ width: 120 }} value={this.state.value} onChange={this.onChange} />
                     </Form.Item>
                     <Form.Item style={{textAlign: 'center'}} >
-                        <Button type="primary" htmlType="submit">Generate Feedback</Button>
+                        <Button type="primary" htmlType="submit">Generate Feedbacks</Button>
                     </Form.Item>
                  </Form>
             
