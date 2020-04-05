@@ -199,13 +199,21 @@ class ChooseExistingFeedback extends React.Component{
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/>
                     </Card>
                   </Col>
+                  {/* Improvement feedback */}
+                  <Col>
+                        <Card  bordered style={{color: 'blue',marginLeft: 100}} title="Improvement Information" bordered={false}>
+                          <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
+                          <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.level}</Text> : <Spin indicator={antIcon} />} <br/>
+                          <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.category}</Text>: <Spin indicator={antIcon} />} <br />
+                        </Card> 
+                  </Col>
                   <Col>
                       <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '18px'}} title="Topic breakdown" bordered={false}>
                       {list_topics.map((i,j) =>{
                         return(
                         <Col span={12}>
-                            <Text strong >Title: <h8 style={{color: '#096dd9'}}>{list_topics[j]}</h8></Text><br/>
-                            <Text strong >Mark: <h8 style={{color: '#096dd9'}}>{list_marks[j]}</h8></Text>
+                            <Text strong >Title: <Text strong style={{color: '#096dd9'}}>{list_topics[j]}</Text></Text><br/>
+                            <Text strong >Mark: <Text strong  style={{color: '#096dd9'}}>{list_marks[j]}</Text></Text>
                          </Col>
                         )
                       })}  
@@ -213,7 +221,7 @@ class ChooseExistingFeedback extends React.Component{
                   </Col>
                   {
                     this.state.collectionFeedback ?
-                   <div>Please wait while {this.state.feedbackAmount} feedbacks are being generated!<Spin indicator={antIcon} /></div>
+                   <Text strong style={{color: 'skyblue', fontSize: '19px'}}>Please wait while {this.state.feedbackAmount} feedbacks are being generated!<br/><Spin indicator={antIcon} /></Text>
                     :
                     <div style={{textAlign: 'center'}}>
                       {this.state.data.map(function(item, i){
@@ -256,14 +264,7 @@ class ChooseExistingFeedback extends React.Component{
                           </Col>
                         )
                       })}
-                      {/* Improvement feedback */}
-                      <Col>
-                        <Card bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
-                          <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
-                          <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.level}</Text> : <Spin indicator={antIcon} />} <br/>
-                          <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.category}</Text>: <Spin indicator={antIcon} />} <br />
-                        </Card> 
-                      </Col>
+                      
                     </div>
                   }
                 </Row>

@@ -131,7 +131,7 @@ class RegistrationForm extends React.Component {
         Or 
         <NavLink 
             style={{marginRight: '10px'}} 
-            to='/teacherlogin'> login as a teacher
+            to='/login'> login as a teacher
         </NavLink>
         </FormItem>
 
