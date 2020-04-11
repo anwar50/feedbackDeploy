@@ -264,13 +264,25 @@ class ChooseExistingFeedback extends React.Component{
                     </Card>
                   </Col>
                   {/* Improvement feedback */}
+                  
                   <Col>
-                        <Card  className="popupreview" bordered style={{color: 'blue',marginLeft: 10}} title="Improvement Information" bordered={false}>
-                          <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
-                          <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.level}</Text> : <Spin indicator={antIcon} />} <br/>
-                          <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.category}</Text>: <Spin indicator={antIcon} />} <br />
-                        </Card> 
-                  </Col>
+                    {
+                    this.state.personalImprovementGiven ? 
+                    <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 10}} title="Improvement Information" bordered={false}>
+                        <Text strong>Area (s) of improvement: </Text>
+                        <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text><br />
+                        <Text strong>Created by: </Text>
+                        <Text strong style={{color: '#096dd9'}}>{this.props.match.params.userid}</Text>
+                    </Card>
+                    :
+                    <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 10}} title="Improvement Information" bordered={false}>
+                      <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.level}</Text> : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.category}</Text>: <Spin indicator={antIcon} />} <br />
+                    </Card> 
+                    }
+                       
+                  </Col>  
                   <Col span={8}>
                     <Card className="popupreview" headStyle={{backgroundColor: 'red'}} bordered style={{color: 'blue'}} title="Improvement Feedback" bordered={false}>
                         
@@ -280,6 +292,7 @@ class ChooseExistingFeedback extends React.Component{
                         <Text strong>{this.state.showFeedback ? <Button onClick={(e) => this.createImprovement(this.props.match.params.testid)}>Create your own improvement feedback</Button> : null}</Text>
                     </Card>
                   </Col>
+                  
                   {
                     this.state.collectionFeedback ?
                    <Text strong style={{color: 'skyblue', fontSize: '19px'}}>Please wait while {this.state.feedbackAmount} feedback(s) are being generated!<br/><Spin indicator={antIcon} /></Text>
@@ -319,8 +332,6 @@ class ChooseExistingFeedback extends React.Component{
                                 <Text strong style={{color: '#096dd9'}}>Score: </Text><Text strong>{score}</Text><br />
                                 <Text strong style={{color: '#096dd9'}}>Outcome of test: </Text><Text strong>{item.effectiveness}</Text>
                             </Card>
-                            
-                            {/* <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link> */}
                             <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct +`/`+ incorrect +`/` + score + `/` + item.review + `/` + Finalimprovement + `/` + Area + `/` + effect + `/` + user}><Button style={{marginLeft: '70%', margin: '5px'}} type="primary">Happy to see the full result?</Button></Link>
                           </Col>
                         )

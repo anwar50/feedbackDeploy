@@ -238,9 +238,18 @@ class GeneratedFeedback extends React.Component {
               <span>
                 {/* <a href="#">Action 一 {record.test}</a> */}
                 <Button onClick={(e) => this.handleSave(record.test, record.grade, this.props.match.params.feedback, this.props.match.params.userid, record.percentage)} type="primary" htmlType="submit">Save Feedback</Button>
-                <Divider type="horizontal" />
+                <Divider type="vertical" />
                 <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this feedback?</Button></Link>
 
+           </span>
+            ),
+          },{
+            title: 'Export Information',
+            key: 'action',
+            render: (text, record) => (
+              <span>
+                {/* <a href="#">Action 一 {record.test}</a> */}
+                <CSVLink data={this.props.match.params.feedback} ><Button type="primary" htmlType="submit" >Export Overall Feedback</Button></CSVLink>
            </span>
             ),
           }];
@@ -269,12 +278,30 @@ class GeneratedFeedback extends React.Component {
               <span>
                 {/* <a href="#">Action 一 {record.test}</a> */}
                 <Button onClick={(e) => this.handleSaveImprovement(this.props.match.params.testid, this.props.match.params.testgrade, record.areaOfImprovement, record.feedback, this.props.match.params.userid)} type="primary" htmlType="submit">Save Improvement Feedback</Button>
-                <Divider type="horizontal" />
+                <Divider type="vertical" />
                 <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with this improvement feedback</Button></Link>
            </span>
             ),
+          },{
+            title: 'Export Information',
+            key: 'export',
+            render: (text, record) => (
+              <span>
+                {/* <a href="#">Action 一 {record.test}</a> */}
+                <CSVLink data={this.props.match.params.improvement} ><Button type="primary" htmlType="submit" >Export Improvement Feedback</Button></CSVLink>
+           </span>
+            ),
           }];
-          let score = Math.round(this.props.match.params.score * 100)
+          let score = 0;
+          if(this.props.match.params.score.toString().length == 2)
+          {
+            score = this.props.match.params.score;
+          }
+          else
+          {
+            score = Math.round(this.props.match.params.score * 100)
+          }
+          
 
           const testInfo = [{
             key: '1',
@@ -296,9 +323,7 @@ class GeneratedFeedback extends React.Component {
                 {/*   ############IMPROVEMENT TABLE############      */}
                 <h2 style={{color: 'skyblue', display: 'flex', justifyContent: 'center'}} >Here's a summary of your chosen improvement feedback</h2>
                 <Table id="test2" columns={Imrpovementcolumns} dataSource={improvementInfo} />
-                <div style={{marginLeft: '40%', marginRight: '50%'}}>
-                  <CSVLink data={id + " : " + test_grade + " : " + random_feedback} ><Button type="primary" htmlType="submit" >Export Feedbacks</Button></CSVLink>
-                </div>
+                
             </div>
         )
     }
