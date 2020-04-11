@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Input,Card, Col, Row,notification, Spin, Typography, Modal, Tooltip  } from "antd";
+import { Form, Button,Card, Col, Row, Spin, Typography, Modal, List, Input  } from "antd";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import '../css/Layout.css';
@@ -26,6 +26,8 @@ class ChooseExistingFeedback extends React.Component{
             marks: "",
             topics: "",
             giveImprovement: false,
+            personalImprovementGiven: false,
+            personalImprovement: "",
         }
     }
     onChange = value => {
@@ -149,6 +151,48 @@ class ChooseExistingFeedback extends React.Component{
          if (/\+|-/.test(keyValue))
            event.preventDefault();
       }
+    handleImprovementSubmit(e, requestMethod, test, mod)
+    {
+        e.preventDefault();
+        const title = e.target.elements.name.value;
+        console.log(title);
+        this.setState({
+          personalImprovementGiven: true,
+          personalImprovement: title
+        })
+    }
+      createImprovement(test){
+        let secondsToGo = 600;
+        
+        const modal = Modal.success({
+          title: `This pop up will be destroyed after 10 minutes` ,
+          content: '',
+        });
+        const timer = setInterval(() => {
+          secondsToGo -= 1;
+          modal.update({
+            content: 
+            <div>
+            <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
+                  <strong>Your improvement feedback has been changed!</strong>
+            </div>
+            <h2 style={{display: 'flex', justifyContent: 'center'}} >Create a improvement feedback for {test} here!</h2>
+            <Form onSubmit={(event) => this.handleImprovementSubmit(event, test)}>
+                <Form.Item label="Improvement Feedback">
+                  <Input name="name" placeholder="write your feedback here.." />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">Create improvement feedback</Button>
+                </Form.Item>
+          </Form>
+        </div> ,
+          });
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(timer);
+          modal.destroy();
+        }, secondsToGo * 1000);
+      }
     SendFeedback(e)
     {
         console.log(e)
@@ -183,6 +227,12 @@ class ChooseExistingFeedback extends React.Component{
       var list_marks = new Array();
       list_topics = this.state.topics.split(",")
       list_marks = this.state.marks.split(",")
+      let Finalimprovement = this.state.improvementFeedback.review;
+      let Area = this.state.AreasOfImprovement;
+      const data = [];
+      list_topics.map((i,j) =>{
+        data.push({title: list_topics[j], mark: list_marks[j]})
+      })
         return(
             <div >
                 
@@ -199,29 +249,40 @@ class ChooseExistingFeedback extends React.Component{
                       <Text strong>Incorrect Answers:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.incorrect}</Text> <br/>
                     </Card>
                   </Col>
+                    {/* Test breakdown */}
+                  <Col>
+                    <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center'}} title="Test breakdown" bordered={false}>
+                        <List
+                            grid={{ gutter: 16, column: 2 }}
+                            dataSource={data}
+                            renderItem={item => (
+                              <List.Item>
+                                <Card title={item.title}>Mark: <h8 style={{color: '#096dd9'}}>{item.mark}</h8></Card>
+                              </List.Item>
+                            )}
+                        />
+                    </Card>
+                  </Col>
                   {/* Improvement feedback */}
                   <Col>
-                        <Card  bordered style={{color: 'blue',marginLeft: 100}} title="Improvement Information" bordered={false}>
+                        <Card  className="popupreview" bordered style={{color: 'blue',marginLeft: 10}} title="Improvement Information" bordered={false}>
                           <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
                           <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.level}</Text> : <Spin indicator={antIcon} />} <br/>
                           <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedback.category}</Text>: <Spin indicator={antIcon} />} <br />
                         </Card> 
                   </Col>
-                  <Col>
-                      <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '18px'}} title="Topic breakdown" bordered={false}>
-                      {list_topics.map((i,j) =>{
-                        return(
-                        <Col span={12}>
-                            <Text strong >Title: <Text strong style={{color: '#096dd9'}}>{list_topics[j]}</Text></Text><br/>
-                            <Text strong >Mark: <Text strong  style={{color: '#096dd9'}}>{list_marks[j]}</Text></Text>
-                         </Col>
-                        )
-                      })}  
-                      </Card>
+                  <Col span={8}>
+                    <Card className="popupreview" headStyle={{backgroundColor: 'red'}} bordered style={{color: 'blue'}} title="Improvement Feedback" bordered={false}>
+                        
+                        <Text strong>Feedback: {this.state.personalImprovementGiven 
+                        ? <Text strong style={{color: '#096dd9'}}>{this.state.personalImprovement}</Text> : <Text strong style={{color: '#096dd9'}}>{this.state.giveImprovement ?  this.state.improvementFeedback.review : null}</Text> }</Text>
+                        <Text strong>{this.state.showFeedback ? <Button onClick={(e) => this.generateImprovementfeedback(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect, this.props.match.params.effect)}>Find out feedback for areas of improvement</Button> : <Spin indicator={antIcon} />}</Text><br />
+                        <Text strong>{this.state.showFeedback ? <Button onClick={(e) => this.createImprovement(this.props.match.params.testid)}>Create your own improvement feedback</Button> : null}</Text>
+                    </Card>
                   </Col>
                   {
                     this.state.collectionFeedback ?
-                   <Text strong style={{color: 'skyblue', fontSize: '19px'}}>Please wait while {this.state.feedbackAmount} feedbacks are being generated!<br/><Spin indicator={antIcon} /></Text>
+                   <Text strong style={{color: 'skyblue', fontSize: '19px'}}>Please wait while {this.state.feedbackAmount} feedback(s) are being generated!<br/><Spin indicator={antIcon} /></Text>
                     :
                     <div style={{textAlign: 'center'}}>
                       {this.state.data.map(function(item, i){
@@ -259,8 +320,8 @@ class ChooseExistingFeedback extends React.Component{
                                 <Text strong style={{color: '#096dd9'}}>Outcome of test: </Text><Text strong>{item.effectiveness}</Text>
                             </Card>
                             
-                            <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link>
-              
+                            {/* <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct + `/` + incorrect +`/` + score + `/` + review + `/` + user}><Button onClick={(e) => SendFeedback(review)} style={{margin: '5px'}} type="primary">Choose Feedback</Button></Link> */}
+                            <Link to={`/generatefeedback/` + testName + `/` + testMark +`/` + testGrade + `/` + correct +`/`+ incorrect +`/` + score + `/` + item.review + `/` + Finalimprovement + `/` + Area + `/` + effect + `/` + user}><Button style={{marginLeft: '70%', margin: '5px'}} type="primary">Happy to see the full result?</Button></Link>
                           </Col>
                         )
                       })}

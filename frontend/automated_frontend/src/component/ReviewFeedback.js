@@ -1,5 +1,5 @@
 import React from "react";
-import { Statistic, Form, Button, Input,Card, Col, Row,notification, Spin, Typography, Modal, Tooltip, Carousel  } from "antd";
+import { Statistic, Form, Button, Input,Card, Col, Row, Spin, Typography, Modal, Tooltip, List  } from "antd";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import '../css/reviewFeedback.css';
@@ -25,7 +25,8 @@ class ReviewFeedback extends React.Component{
             typeOfFeedback: false,
             feedbackColor: "",
             topics: "",
-            marks: ""
+            marks: "",
+            question_type: "",
         }
         this.onChangeFeedback = this.onChangeFeedback.bind(this)
     }
@@ -44,13 +45,16 @@ class ReviewFeedback extends React.Component{
         let weakest = ""
         let list_of_topics = []
         let list_of_marks = []
+        let questiontype = "";
         axios.get(`http://127.0.0.1:8000/api/test`)
         .then(res => {
             res.data.map(function(item, i){
               if(testName == item.name)
               {
                 test_id = item.id
+                questiontype = item.questiontype
               }
+             
             })
             axios.get(`http://127.0.0.1:8000/api/answers`)
             .then(res => {
@@ -65,7 +69,8 @@ class ReviewFeedback extends React.Component{
                 this.setState({
                   AreasOfImprovement: weakest,
                   topics: list_of_topics,
-                  marks: list_of_marks
+                  marks: list_of_marks,
+                  question_type: questiontype
                 })
             })
         })
@@ -250,6 +255,12 @@ class ReviewFeedback extends React.Component{
       var list_marks = new Array();
       list_topics = this.state.topics.split(",")
       list_marks = this.state.marks.split(",")
+      const data = [];
+      list_topics.map((i,j) =>{
+        
+        data.push({title: list_topics[j], mark: list_marks[j]})
+        
+      })
       console.log(list_topics)
         return(
             <div >
@@ -271,6 +282,9 @@ class ReviewFeedback extends React.Component{
                       <Col span={12}>
                         <Statistic title="Incorrect answers" value={this.props.match.params.incorrect} suffix={" "} />
                       </Col>
+                      <Col span={25}>
+                        <Statistic  title="Type of test" value={this.state.question_type} suffix={" "} />
+                      </Col>
                     </Row>
                       {/* <Text strong>Test Name:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testid}</Text> <br/>
                       <Text strong>Test Grade:</Text> <Text strong style={{color: '#096dd9'}}>{this.props.match.params.testgrade}</Text> <br />
@@ -281,16 +295,17 @@ class ReviewFeedback extends React.Component{
                     </Card>
                   </Col>
                   <Col>
-                      <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center', fontSize: '18px'}} title="Topic breakdown" bordered={false}>
-                      {list_topics.map((i,j) =>{
-                        return(
-                        <Col span={12}>
-                            <Text strong >Title: <h8 style={{color: '#096dd9'}}>{list_topics[j]}</h8></Text><br/>
-                            <Text strong >Mark: <h8 style={{color: '#096dd9'}}>{list_marks[j]}</h8></Text>
-                         </Col>
-                        )
-                      })}  
-                      </Card>
+                  <Card className="popupreview" bordered style={{color: 'blue', textAlign: 'center'}} title="Test breakdown" bordered={false}>
+                      <List
+                          grid={{ gutter: 16, column: 2 }}
+                          dataSource={data}
+                          renderItem={item => (
+                            <List.Item>
+                              <Card title={item.title}>Mark: <h8 style={{color: '#096dd9'}}>{item.mark}</h8></Card>
+                            </List.Item>
+                          )}
+                      />
+                  </Card>
                   </Col>
                 </Row>
                 
@@ -400,7 +415,7 @@ class ReviewFeedback extends React.Component{
                     
                     <Button style={{ margin: '5px'}} type="primary" onClick={(e) => this.generateFeedback(this.props.match.params.testid, this.props.match.params.testgrade, this.props.match.params.testmark, this.props.match.params.correct, this.props.match.params.incorrect, this.props.match.params.effect)}>Generate another feedback?</Button>
                     <Link to={`/chooseExistingFeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.state.feedbackData.score + `/` + this.props.match.params.effect + `/` + this.props.match.params.userid}><Button style={{marginLeft: '70%', margin: '5px'}} type="primary">Choose from a batch of feedbacks?</Button></Link>
-                    <Link to={`/generatefeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.state.feedbackData.score + `/` + this.state.feedbackData.review + `/` + this.state.improvementFeedbackData.review + `/` + this.state.AreasOfImprovement + `/` + this.props.match.params.effect + `/` + this.props.match.params.userid}><Button style={{marginLeft: '70%', margin: '5px', backgroundColor: 'green'}} >Happy to see the full result?</Button></Link>
+                    <Link to={`/generatefeedback/` + this.props.match.params.testid + `/` + this.props.match.params.testmark +`/` + this.props.match.params.testgrade + `/` + this.props.match.params.correct +`/`+ this.props.match.params.incorrect +`/` + this.state.feedbackData.score + `/` + this.state.feedbackData.review + `/` + this.state.improvementFeedbackData.review + `/` + this.state.AreasOfImprovement + `/` + this.props.match.params.effect + `/` + this.props.match.params.userid}><Button style={{marginLeft: '70%', margin: '5px'}} type="primary">Happy to see the full result?</Button></Link>
                     <Link to={`/createFeedback/` + this.props.match.params.testid + '/' + this.props.match.params.userid}><Button type="primary" htmlType="submit" style={{alignItems:'center'}}>Not happy with any of these feedbacks?</Button></Link>
                   
                 </div>

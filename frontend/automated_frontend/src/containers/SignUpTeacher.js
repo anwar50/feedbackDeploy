@@ -30,10 +30,10 @@ class RegistrationForm extends React.Component {
             values.confirm,
             this.state.type
         );
-        this.state.modulename = values.module
+        //this.state.modulename = values.module
         console.log(this.state.modulename)
           //redirect to home page after signing up
-        this.props.history.push('/');
+        this.props.history.push('/login');
       }
     });
   }
@@ -104,14 +104,6 @@ class RegistrationForm extends React.Component {
             <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" onBlur={this.handleConfirmBlur} />
           )}
         </FormItem>
-
-        <FormItem>
-            {getFieldDecorator('module', {
-                rules: [{ required: true, message: 'Please state a module that you teach!' }],
-            })(
-                <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Module" />
-            )}
-        </FormItem>
               You must choose an avatar!
         <FormItem>
               {getFieldDecorator('avatar',{
@@ -119,8 +111,10 @@ class RegistrationForm extends React.Component {
               })(<Select ref={ref => {
                     this._select = ref }} labelInValue defaultValue={this.state.value} style={{width: 120}} onChange={this.handleChange}>
                       <Option value="avatar1"><Avatar size={54} src="https://img.icons8.com/bubbles/100/000000/user.png" /></Option>
-                      <Option value="avatar2"><Avatar size={54} src="https://img.icons8.com/material-rounded/96/000000/user.png" /></Option>
+                      <Option value="avatar2"><Avatar size={54} src="https://img.icons8.com/ultraviolet/80/000000/user.png" /></Option>
                       <Option value="avatar3"><Avatar size={54} src="https://img.icons8.com/officel/80/000000/user.png" /></Option>
+                      <Option value="avatar4"><Avatar size={54} src="https://img.icons8.com/color/96/000000/user.png" /></Option>
+                      <Option value="avatar5"><Avatar size={54} src="https://img.icons8.com/ios/100/000000/user.png" /></Option>
                 </Select>
                 )}
         </FormItem>

@@ -75,13 +75,12 @@ class GradeForm extends React.Component {
       //calculate the weakest topic!
       
       let lowest = this.state.marksForTopics;
-      let lowestMark = lowest[0];
       let lowestIndex = 0;
-      for(var i = 1; i < lowest.length; i++)
+      const minimum_mark = Math.min(...lowest)
+      for(var i = 0; i < lowest.length; i++)
       {
-        if(lowest[i] < lowestMark)
+        if(lowest[i] == minimum_mark)
         {
-          lowestMark = lowest[i];
           lowestIndex = i;
         }
       }
@@ -254,10 +253,10 @@ class GradeForm extends React.Component {
     let list_topics = []
     let list_marks = []
     this.state.topics.map(function(item, i){
-      list_topics.push((i+1) + ". " + item)
+      list_topics.push((i+1) + ".) " + item)
     })
     this.state.marksForTopics.map(function(item, i){
-      list_marks.push((i+1) + ". " + item)
+      list_marks.push((i+1) + ".) " + item)
     })
     console.log(this.state.marksForTopicsAsked)
     return (

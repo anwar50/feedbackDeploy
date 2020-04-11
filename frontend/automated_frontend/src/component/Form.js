@@ -1,7 +1,7 @@
-import { Form, Input, Button} from 'antd';
+import { Form, Input, Button, Modal} from 'antd';
 import React from "react"
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 // const {Option} = Select;
 
 class CustomForm extends React.Component {
@@ -63,6 +63,23 @@ class CustomForm extends React.Component {
                     .then(res => {
                         console.log(res)
                         found = true;
+                        let secondsToGo = 60;
+                        const modal = Modal.success({
+                          title: `This message will be destroyed after 1 minute.`,
+                          content: ``,
+                        });
+                        const timer = setInterval(() => {
+                          secondsToGo -= 1;
+                          modal.update({
+                            content: <div>
+                                        <strong>You have created a new module, go and check it out under your modules list!</strong>
+                                      </div>,
+                          });
+                        }, 1000);
+                        setTimeout(() => {
+                          clearInterval(timer);
+                          modal.destroy();
+                        }, secondsToGo * 1000);
                     })
                     .catch(err => {
                         // dispatch(authFail(err))
@@ -129,15 +146,7 @@ class CustomForm extends React.Component {
               <Form.Item label="Number Of Students">
                 <Input type="number" name="num" pattern="[0-400]" onKeyPress={this.onKeyPress.bind(this)} placeholder={this.state.module.num_students} />
               </Form.Item>
-          {/* <Form.Item label="Number Of Students">
-            <Select labelInValue defaultValue={{key: '100'}} style={{width: 120}}onChange={this.handleChange}>
-                  <Option value="100">100</Option>
-                  <Option value="200">200</Option>
-                  <Option value="300">300</Option>
-                  <Option value="400">400</Option>
-                  <Option value="500">500</Option>
-            </Select>
-          </Form.Item> */}
+          
           <Form.Item>
             <Button type="primary" htmlType="submit">{this.props.btnText}</Button>
           </Form.Item>
