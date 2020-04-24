@@ -12,7 +12,7 @@ class ModuleList extends React.Component {
     {
         
         axios.get('http://127.0.0.1:8000/api/modules')
-        .then(res =>{
+        .then(res =>{ 
             this.setState({
                 modules: res.data
             })

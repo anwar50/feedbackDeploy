@@ -4,8 +4,9 @@ from django.contrib.auth.models import AbstractUser, User
 from django.template.defaultfilters import slugify
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+from nose.tools import nottest
 from django.core.validators import MaxValueValidator, MinValueValidator
-# Create your models here.
+# Create your models here. 
 class Module(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
@@ -22,6 +23,7 @@ class TeacherProfile(models.Model):
     avatar = models.CharField(max_length=200, default="None")
     def __str__(self):
         return self.user.username
+@nottest
 class Test(models.Model):
     name = models.CharField(max_length=1000)
         #number of questions has to be up to 10 questions
@@ -38,6 +40,7 @@ class Test(models.Model):
         verbose_name_plural = "Tests"
     def __str__(self):
         return self.name
+@nottest
 class UserTest(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     username = models.CharField(max_length=70, default="None")

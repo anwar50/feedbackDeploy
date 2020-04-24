@@ -80,7 +80,7 @@ class GeneratedFeedback extends React.Component {
                     user: user,
                     feedback: feedback,
                     percentage: percentage,
-                    created_by: "Feedback generator",
+                    created_by: "QMFeedback",
             })
             
             let secondsToGo = 10;
