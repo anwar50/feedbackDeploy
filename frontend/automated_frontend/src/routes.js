@@ -19,6 +19,8 @@ import SavedFeedback from "./component/SavedFeedback";
 import FeedbackInformation from "./component/FeedbackInformation";
 import ReviewFeedback from "./component/ReviewFeedback";
 import ChooseExistingFeedback from "./component/ChooseExistingFeedback";
+import ContactUs from "./component/ContactUs";
+import FrequentlyAskedQuestions from "./component/FrequentlyAskedQuestions";
 const BaseRouter = (props) => (
         <div>
             <Route exact path="/" component={WelcomePage}/>
@@ -34,6 +36,8 @@ const BaseRouter = (props) => (
             <Route exact path="/addmodule/:userid" component={AddModule} />
             <Route exact path="/feedbackInfo" component={FeedbackMechanism} />
             <Route exact path="/savedtests/:id" component={SavedTests} />
+            <Route exact path="/contact" component={ContactUs} />
+            <Route exact path="/FAQ" component={FrequentlyAskedQuestions} />
             <Route exact path="/savedfeedbacks/:id" component={SavedFeedback} />
             <Route exact path="/generatefeedback/:testid/:testmark/:testgrade/:correct/:incorrect/:score/:feedback/:improvement/:topicImprovement/:effect/:userid" component={GeneratedFeedback} />
             <Route exact path="/feedbackInfo/:id/:userid" component={FeedbackInformation} />  

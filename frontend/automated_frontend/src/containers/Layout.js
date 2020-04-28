@@ -128,10 +128,10 @@ class CustomLayout extends React.Component {
                     <Link to="/grade">Grade Mechanism</Link>
                 </Menu.Item>
                 <Menu.Item key="37">
-                    <Link to="/grade">Contact Us</Link>
+                    <Link to="/contact">Contact Us</Link>
                 </Menu.Item>
                 <Menu.Item key="8">
-                    <Link to="/grade">FAQ</Link>
+                    <Link to="/FAQ">FAQ</Link>
                 </Menu.Item>
                 {
                     this.props.isAuthenticated ?

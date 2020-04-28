@@ -186,7 +186,7 @@ class ReviewFeedback extends React.Component{
           <div className={`alert alert-success ${this.state.showingAlert ? 'alert-shown': 'alert-hidden'}`}>
                 <strong>Your improvement feedback has been changed!</strong>
           </div>
-          <h2 style={{display: 'flex', justifyContent: 'center'}} >Create a improvement feedback for {test} here!</h2>
+          <h2 style={{display: 'flex', justifyContent:'center'}} >Create a improvement feedback for{test}here!</h2>
           <Form onSubmit={(event) => this.handleImprovementSubmit(event, test)}>
               <Form.Item label="Improvement Feedback">
                 <Input name="name" placeholder="write your feedback here.." />
@@ -230,7 +230,8 @@ class ReviewFeedback extends React.Component{
           <h2 style={{display: 'flex', justifyContent: 'center'}} >Edit this feedback here!</h2>
           <Form onSubmit={(event) => this.handleEditedFeedbackSubmit(event, e)}>
               <Form.Item label="Feedback">
-                <Input name="name" value={this.state.editedFeedback} onChange={this.onChangeFeedback}  placeholder={e} />
+                <Input name="name" value={this.state.editedFeedback} 
+                      onChange={this.onChangeFeedback}placeholder={e} />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">Publish edited feedback</Button>
@@ -320,11 +321,26 @@ class ReviewFeedback extends React.Component{
                     </Card>
                   </Col>
                   <Col span={10}>
-                    <Card  className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} title="Overall feedback information" bordered={false}>
-                      <Text strong>Percentage:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{score_one}</Text> : <Spin indicator={antIcon} />} <br/>
-                      <Text strong>Outcome of the generator:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
-                      <Text strong>Outcome of the test:</Text> {this.state.showFeedback ? <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>: <Spin indicator={antIcon} />} <br />
-                      <Text strong type="warning">{this.state.showFeedback ? <p>Based on this information this student {this.state.improvement ? <Text strong style={{color: 'red'}}>Needs improvement!</Text> : <Text strong style={{color: 'green'}}>Is doing very well!</Text>}</p> : null} </Text>
+                    <Card className="popupreview" bordered style={{color: 'blue', marginLeft: 150}} 
+                          title="Overall feedback information" bordered={false}>
+                      <Text strong>Percentage:</Text> {this.state.showFeedback ? 
+                      <Text strong style={{color: '#096dd9'}}>{score_one}</Text> 
+                        : <Spin indicator={antIcon} />} <br/>
+                      <Text strong>Outcome of the generator:</Text> 
+                      {this.state.showFeedback ? 
+                      <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.category}</Text>
+                        : <Spin indicator={antIcon} />} <br />
+                      <Text strong>Outcome of the test:</Text> 
+                      {this.state.showFeedback ? 
+                        <Text strong style={{color: '#096dd9'}}>{this.state.feedbackData.effectiveness}</Text>
+                        : <Spin indicator={antIcon} />} <br />
+                      <Text strong type="warning">
+                        {this.state.showFeedback ? 
+                      <p>Based on this information this student 
+                          {this.state.improvement ? 
+                      <Text strong style={{color: 'red'}}>Needs improvement!</Text> 
+                          : <Text strong style={{color: 'green'}}>Is doing very well!</Text>}</p> 
+                          : null} </Text>
                     </Card>
                   </Col>
                 </Row>
@@ -402,10 +418,25 @@ class ReviewFeedback extends React.Component{
                         <Text strong style={{color: '#096dd9'}}>{this.props.match.params.userid}</Text>
                     </Card>
                     :
-                    <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 150}} title="Improvement Information" bordered={false}>
-                      <Text strong>Area (s) of improvement:</Text>{this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.AreasOfImprovement}</Text> : <Spin indicator={antIcon} />} <br/>
-                      <Text strong>Improvement:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.level}</Text> : <Spin indicator={antIcon} />} <br/>
-                      <Text strong>Outcome of the generator:</Text> {this.state.giveImprovement ? <Text strong style={{color: '#096dd9'}}>{this.state.improvementFeedbackData.category}</Text>: <Spin indicator={antIcon} />} <br />
+                    <Card className="popupreview" bordered style={{color: 'blue',marginLeft: 150}} 
+                          title="Improvement Information" bordered={false}>
+                          <Text strong>Area (s) of improvement:</Text>
+                          {this.state.giveImprovement ? 
+                          <Text strong style={{color: '#096dd9'}}>
+                            {this.state.AreasOfImprovement}
+                          </Text> 
+                          : <Spin indicator={antIcon} />} <br/>
+                          <Text strong>Improvement:</Text> 
+                          {this.state.giveImprovement ? 
+                          <Text strong style={{color: '#096dd9'}}>
+                            {this.state.improvementFeedbackData.level}
+                          </Text> 
+                          : <Spin indicator={antIcon} />} <br/>
+                          <Text strong>Outcome of the generator:</Text> 
+                          {this.state.giveImprovement ? 
+                          <Text strong style={{color: '#096dd9'}}>
+                            {this.state.improvementFeedbackData.category}
+                          </Text> : <Spin indicator={antIcon} />} <br />
                     </Card> 
                     }
                        
