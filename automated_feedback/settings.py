@@ -29,7 +29,7 @@ SECRET_KEY = '5-k8%r!xf3rr48nx&tc2i1ltdy-u)c7iid7mqa8cm0$y^-#e8o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['feedbackqm.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['testdjangoreact.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
