@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import django_heroku
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -164,3 +165,4 @@ CORS_ORIGIN_REGEX_WHITELIST = [
 ]
 CSRF_COOKIE_SECURE = False
 #AUTH_USER_MODEL = "app.User" 
+django_heroku.settings(locals())
