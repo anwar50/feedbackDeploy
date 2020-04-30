@@ -2,6 +2,7 @@
   "name": "automated_frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@ant-design/colors": "^4.0.0",
     "@ant-design/icons": "^4.0.6",
